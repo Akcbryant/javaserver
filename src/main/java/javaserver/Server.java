@@ -9,21 +9,32 @@ public class Server {
     int port;
     ServerSocket serverSocket;
     Socket clientSocket;
+    boolean readyForClient = false;
 
     Server(int port) {
         this.port = port;
+    }
+
+    Server(int port, ServerSocket serverSocket, Socket clientSocket) {
+        this.port = port;
+        this.serverSocket = serverSocket;
+        this.clientSocket = clientSocket;
     }
 
     public void start() {
         openPort();
         acceptClient();
         respond();
-        breakDown();
     }
 
     private void openPort() {
         try {
-            this.serverSocket = new ServerSocket(port);
+            if (serverSocket != null) {
+                readyForClient = true;
+            } else {
+                serverSocket = new ServerSocket(port);
+                readyForClient = true;
+            }
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port."
                  + port);
@@ -31,10 +42,17 @@ public class Server {
     }
 
     private void acceptClient() {
-        try {
-            clientSocket = serverSocket.accept();
-        } catch (IOException e) {
-            System.out.println("Exception caught when trying to accept client." + e.toString());
+        while (readyForClient) {
+            try {
+                if (clientSocket != null) {
+                    readyForClient = false; 
+                } else {
+                    clientSocket = serverSocket.accept();
+                    readyForClient = false;
+                }
+            } catch (IOException e) {
+                System.out.println("Exception caught when trying to accept client." + e.toString());
+            }
         }
     }
 
@@ -47,8 +65,9 @@ public class Server {
         }
     }
 
-    private void breakDown() {
+    public void turnOff() {
         try {
+            readyForClient = false;
             serverSocket.close();
             clientSocket.close();
         } catch (IOException e) {

@@ -1,29 +1,32 @@
 package javaserver;
 
-import junit.framework.Assert.*;
+import org.junit.Assert.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.io.*;
 import java.net.Socket;
+import java.net.ServerSocket;
+
 public class ServerTest extends TestCase {
 
     int testPort = 5000;
-    Server server = new Server(testPort);
 
-    public void testPortBound() {
-        assertEquals("Failure - the port did not get set.", server.port, 5000);
+    public void testPortIsSet() {
+        Server testServer = new Server(testPort);
+        assertEquals("Failure - the port did not get set.", testServer.port, testPort);
     }
 
-    //public void testStart() throws Exception {
-       //server.start();
+    public void testServerStart() throws Exception {
+        ServerSocket testServerSocket = new ServerSocket(testPort);
 
-       //Socket mockClientSocket = new Socket("localhost", 5000);
-       //mockClientSocket.getOutputStream().write("GET".getBytes());
+        Socket testClientSocket = new Socket("localhost", testPort);
+        testClientSocket.getOutputStream().write("GET / HTTP/1.1\n".getBytes());
+        Server testServer = new Server(testPort, testServerSocket, testClientSocket);
 
-       //assertTrue("Failure - your ServerSocket was not created", server.serverSocket != null);
-       //assertEquals(mockClientSocket, server.clientSocket);
+        testServer.start();
+        assertEquals(testServer.clientSocket.getChannel(), testServer.serverSocket.getChannel());
+    }
 
-       //mockClientSocket.close();
-    //}
 }
