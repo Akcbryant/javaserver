@@ -1,23 +1,24 @@
 package javaserver;
 
-import org.junit.Assert.*;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.ServerSocket;
 
-public class ServerTest extends TestCase {
+public class ServerTest {
 
     int testPort = 5000;
 
+    @Test
     public void testPortIsSet() {
         Server testServer = new Server(testPort);
         assertEquals("Failure - the port did not get set.", testServer.port, testPort);
     }
 
+    @Test
     public void testServerStart() throws Exception {
         ServerSocket testServerSocket = new ServerSocket(testPort);
 

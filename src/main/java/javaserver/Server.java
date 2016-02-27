@@ -22,52 +22,43 @@ public class Server {
     }
 
     public void start() {
-        openPort();
-        acceptClient();
-        respond();
-    }
-
-    private void openPort() {
         try {
-            if (serverSocket != null) {
-                readyForClient = true;
-            } else {
-                serverSocket = new ServerSocket(port);
-                readyForClient = true;
-            }
+            listenOnPort();
+            acceptClient();
+            respond();
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port."
-                 + port);
+            System.out.println(e.toString());
         }
     }
 
-    private void acceptClient() {
+    private void listenOnPort() throws IOException {
+        if (serverSocket != null) {
+            readyForClient = true;
+        } else {
+            serverSocket = new ServerSocket(port);
+            readyForClient = true;
+        }
+    }
+
+    private void acceptClient() throws IOException {
         while (readyForClient) {
-            try {
-                if (clientSocket != null) {
-                    readyForClient = false; 
-                } else {
-                    clientSocket = serverSocket.accept();
-                    readyForClient = false;
-                }
-            } catch (IOException e) {
-                System.out.println("Exception caught when trying to accept client." + e.toString());
+            if (clientSocket != null) {
+                readyForClient = false; 
+            } else {
+                clientSocket = serverSocket.accept();
+                readyForClient = false;
             }
         }
     }
 
-    private void respond() {
+    private void respond() throws IOException {
+        RequestParser parser = new RequestParser(clientSocket.getInputStream());
         String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
-        try {
-            clientSocket.getOutputStream().write(httpOK.getBytes());
-        } catch (IOException e) {
-            System.out.println("Exception caught when trying to write to client socket." + e.toString());
-        }
+        clientSocket.getOutputStream().write(httpOK.getBytes());
     }
 
     public void turnOff() {
         try {
-            readyForClient = false;
             serverSocket.close();
             clientSocket.close();
         } catch (IOException e) {
