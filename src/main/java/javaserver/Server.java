@@ -43,7 +43,7 @@ public class Server {
     private void acceptClient() throws IOException {
         while (readyForClient) {
             if (clientSocket != null) {
-                readyForClient = false; 
+                readyForClient = false;
             } else {
                 clientSocket = serverSocket.accept();
                 readyForClient = false;
@@ -52,7 +52,7 @@ public class Server {
     }
 
     private void respond() throws IOException {
-        RequestParser parser = new RequestParser(clientSocket.getInputStream());
+        System.out.println(clientSocket.getInputStream().available());
         String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
         clientSocket.getOutputStream().write(httpOK.getBytes());
     }

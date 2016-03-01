@@ -23,11 +23,11 @@ public class ServerTest {
         ServerSocket testServerSocket = new ServerSocket(testPort);
 
         Socket testClientSocket = new Socket("localhost", testPort);
-        testClientSocket.getOutputStream().write("GET / HTTP/1.1\n".getBytes());
         Server testServer = new Server(testPort, testServerSocket, testClientSocket);
 
         testServer.start();
-        assertEquals(testServer.clientSocket.getChannel(), testServer.serverSocket.getChannel());
-    }
 
+        assertEquals(testServer.clientSocket.getChannel(), testServer.serverSocket.getChannel());
+        testServer.turnOff();
+    }
 }
