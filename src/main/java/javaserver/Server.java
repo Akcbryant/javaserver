@@ -9,60 +9,49 @@ public class Server {
     int port;
     ServerSocket serverSocket;
     Socket clientSocket;
-    boolean readyForClient = false;
+    boolean serverIsOn = false;
 
     Server(int port) {
         this.port = port;
     }
 
-    Server(int port, ServerSocket serverSocket, Socket clientSocket) {
+    Server(int port, ServerSocket serverSocket) {
         this.port = port;
         this.serverSocket = serverSocket;
-        this.clientSocket = clientSocket;
     }
 
-    public void start() {
+    public void turnOn() {
         try {
             listenOnPort();
-            acceptClient();
-            respond();
+            while (serverIsOn) {
+                clientSocket = serverSocket.accept();
+                respond();
+            }
         } catch (IOException e) {
             System.out.println(e.toString());
         }
     }
 
     private void listenOnPort() throws IOException {
-        if (serverSocket != null) {
-            readyForClient = true;
-        } else {
-            serverSocket = new ServerSocket(port);
-            readyForClient = true;
-        }
-    }
-
-    private void acceptClient() throws IOException {
-        while (readyForClient) {
-            if (clientSocket != null) {
-                readyForClient = false;
-            } else {
-                clientSocket = serverSocket.accept();
-                readyForClient = false;
-            }
-        }
+        serverSocket = new ServerSocket(port);
+        serverIsOn = true;
     }
 
     private void respond() throws IOException {
-        System.out.println(clientSocket.getInputStream().available());
+        Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
         String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
+        System.out.println("Current Request Method: " + request.getMethod());
         clientSocket.getOutputStream().write(httpOK.getBytes());
+        clientSocket.close();
     }
 
     public void turnOff() {
         try {
-            serverSocket.close();
             clientSocket.close();
+            serverSocket.close();
+            serverIsOn = false;
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to close the sockets." + e.toString());
+            System.out.println("Exception caught when trying to close the Server" + e.toString());
         }
     }
 }

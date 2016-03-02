@@ -7,7 +7,8 @@ import java.io.*;
 
 public class RequestParserTest {
 
-    ByteArrayInputStream testInput = new ByteArrayInputStream("GET / HTTP/1.1\r\n".getBytes());
+    String firstLine = "GET / HTTP/1.1\r\n";
+    ByteArrayInputStream testInput = new ByteArrayInputStream(firstLine.getBytes());
     Request request = new RequestParser().parseRequest(testInput);
 
     @Test
