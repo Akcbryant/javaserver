@@ -38,9 +38,9 @@ public class Server {
     }
 
     private void respond() throws IOException {
-        Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
+        RequestParser requestParser = new RequestParser(clientSocket.getInputStream());
         String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
-        System.out.println("Current Request Method: " + request.getMethod());
+        System.out.println("Current Request Method: " + requestParser.method);
         clientSocket.getOutputStream().write(httpOK.getBytes());
         clientSocket.close();
     }
