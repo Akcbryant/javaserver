@@ -16,60 +16,60 @@ public class RequestParserTest {
     String body = "this is test body data\n";
     String testString = firstLine + headers + body;
 
-    RequestParser parser = createTestParser(testString);
+    Request request = createTestRequest(testString);
 
     @Test
     public void testMethodIsParsed() {
-        assertEquals("Request method not properly parsed.", "GET", parser.method);
+        assertEquals("Request method not properly parsed.", "GET", request.getMethod());
     }
 
     @Test
     public void testPathIsParsed() {
-        assertEquals("Request path not properly parsed.", "/", parser.path);
+        assertEquals("Request path not properly parsed.", "/", request.getPath());
     }
 
     @Test
     public void testVersionIsParsed() {
-        assertEquals("Request version not properly parsed.", "HTTP/1.1", parser.version);
+        assertEquals("Request version not properly parsed.", "HTTP/1.1", request.getVersion());
     }
 
 
     @Test
     public void testHeadersAreParsed() {
-        assertEquals("Headers are not properly parsed", 4, parser.headers.size());
+        assertEquals("Headers are not properly parsed", 4, request.getHeaders().size());
     }
 
     @Test
     public void testBodyIsParsed() {
-        assertEquals("Body is not parsed properly.", body, parser.body);
+        assertEquals("Body is not parsed properly.", body, request.getBody());
     }
 
     @Test
     public void testEmptyInput() {
-        parser = createTestParser("");
-        assertEquals("An empty request makes everything empty.", "", parser.method);
+        request = createTestRequest("");
+        assertEquals("An empty request makes everything empty.", "", request.getMethod());
     }
 
     @Test
     public void testEmptyBody() {
         testString = firstLine + headers;
-        parser = createTestParser(testString); 
-        assertFalse("First line should be set.", parser.method.isEmpty());
-        assertTrue("Body should be empty.", parser.body.isEmpty());
+        request = createTestRequest(testString); 
+        assertFalse("First line should be set.", request.getMethod().isEmpty());
+        assertTrue("Body should be empty.", request.getBody().isEmpty());
     }
 
     @Test
     public void testEmptyHeadersAndBody() {
         testString = firstLine;
-        parser = createTestParser(testString);
-        assertFalse("First line should be set.", parser.version.isEmpty());
-        assertTrue("Headers should be empty.", parser.headers.isEmpty());
-        assertTrue("Body should be empty.", parser.body.isEmpty());
+        request = createTestRequest(testString);
+        assertFalse("First line should be set.", request.getVersion().isEmpty());
+        assertTrue("Headers should be empty.", request.getHeaders().isEmpty());
+        assertTrue("Body should be empty.", request.getBody().isEmpty());
     }
 
-    private RequestParser createTestParser(String input) {
+    private Request createTestRequest(String input) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        RequestParser parser = new RequestParser(inputStream);
-        return parser;
+        Request request = new RequestParser().parseRequest(inputStream);
+        return request;
     }
 }
