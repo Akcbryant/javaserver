@@ -22,7 +22,7 @@ public class RequestParser {
             parseHeaders(scanner.next());
             request.setBody(scanner.next());
         } catch (Exception e) {
-            System.out.println("Initial input is malformed.");
+            System.out.println("There was an error parsing your request.");
         }
     }
 

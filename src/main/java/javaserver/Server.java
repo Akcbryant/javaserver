@@ -7,9 +7,9 @@ import java.net.Socket;
 public class Server {
 
     int port;
-    ServerSocket serverSocket;
-    Socket clientSocket;
-    boolean serverIsOn = false;
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+    private boolean serverIsOn = false;
 
     Server(int port) {
         this.port = port;
@@ -40,7 +40,6 @@ public class Server {
     private void respond() throws IOException {
         Request request = new RequestParser().parseRequest(clientSocket.getInputStream());;
         String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
-        System.out.println("Current Request Method: " + request.getMethod());
         clientSocket.getOutputStream().write(httpOK.getBytes());
         clientSocket.close();
     }

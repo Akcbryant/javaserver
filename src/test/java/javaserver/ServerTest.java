@@ -11,21 +11,17 @@ import java.net.ServerSocket;
 
 public class ServerTest {
 
-    Server testServer;
     int testPort = 5000;
 
+    Server testServer;
+
     @Before
-    public void setUp() {
-      testServer = new Server(testPort);
+    public void setUp() throws Exception {
+        testServer = new Server(testPort);
     }
 
     @Test
     public void testPortIsSet() {
         assertEquals("Failure - the port did not get set.", testServer.port, testPort);
-    }
-
-    @Test
-    public void testServerConnects() throws Exception {
-
     }
 }
