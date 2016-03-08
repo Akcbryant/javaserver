@@ -1,77 +1,58 @@
 package javaserver;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
 
     int port;
-    ServerSocket serverSocket;
-    Socket clientSocket;
-    boolean readyForClient = false;
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+    private boolean serverIsOn = false;
 
     Server(int port) {
         this.port = port;
     }
 
-    Server(int port, ServerSocket serverSocket, Socket clientSocket) {
+    Server(int port, ServerSocket serverSocket) {
         this.port = port;
         this.serverSocket = serverSocket;
-        this.clientSocket = clientSocket;
     }
 
-    public void start() {
-        openPort();
-        acceptClient();
-        respond();
-    }
-
-    private void openPort() {
+    public void turnOn() {
         try {
-            if (serverSocket != null) {
-                readyForClient = true;
-            } else {
-                serverSocket = new ServerSocket(port);
-                readyForClient = true;
+            listenOnPort();
+            while (serverIsOn) {
+                clientSocket = serverSocket.accept();
+                respond();
             }
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port."
-                 + port);
+            System.out.println(e.toString());
         }
     }
 
-    private void acceptClient() {
-        while (readyForClient) {
-            try {
-                if (clientSocket != null) {
-                    readyForClient = false; 
-                } else {
-                    clientSocket = serverSocket.accept();
-                    readyForClient = false;
-                }
-            } catch (IOException e) {
-                System.out.println("Exception caught when trying to accept client." + e.toString());
-            }
-        }
+    private void listenOnPort() throws IOException {
+        serverSocket = new ServerSocket(port);
+        serverIsOn = true;
     }
 
-    private void respond() {
+    private void respond() throws IOException {
+        Request request = new RequestParser().parseRequest(clientSocket.getInputStream());;
         String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
-        try {
-            clientSocket.getOutputStream().write(httpOK.getBytes());
-        } catch (IOException e) {
-            System.out.println("Exception caught when trying to write to client socket." + e.toString());
-        }
+        clientSocket.getOutputStream().write(httpOK.getBytes());
+        clientSocket.close();
     }
 
     public void turnOff() {
         try {
-            readyForClient = false;
-            serverSocket.close();
             clientSocket.close();
+            serverSocket.close();
+            serverIsOn = false;
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to close the sockets." + e.toString());
+            System.out.println("Exception caught when trying to close the Server" + e.toString());
         }
     }
 }
