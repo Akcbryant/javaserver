@@ -15,12 +15,16 @@ public class Worker implements Runnable {
 
     public void run() {
         try {
-            Request request = new RequestParser().parseRequest(clientSocket.getInputStream());;
-            String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
-            clientSocket.getOutputStream().write(httpOK.getBytes());
+            Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
+            Response response = new ResponseBuilder(request).buildResponse();
+            clientSocket.getOutputStream().write(response.toString().getBytes());
             clientSocket.close();
         } catch (IOException e) {
 
         }
+    }
+
+    private Response handleRequest(Request request) {
+
     }
 }

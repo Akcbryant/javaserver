@@ -28,7 +28,7 @@ public class Server {
             while (serverIsOn) {
                 clientSocket = serverSocket.accept();
                 Runnable worker = new Worker(clientSocket);
-                new Thread(worker).start(); 
+                new Thread(worker).start();
             }
         } catch (IOException e) {
             System.out.println(e.toString());
