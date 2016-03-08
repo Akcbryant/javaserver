@@ -27,7 +27,8 @@ public class Server {
             listenOnPort();
             while (serverIsOn) {
                 clientSocket = serverSocket.accept();
-                respond();
+                Runnable worker = new Worker(clientSocket);
+                new Thread(worker).start(); 
             }
         } catch (IOException e) {
             System.out.println(e.toString());
@@ -39,12 +40,6 @@ public class Server {
         serverIsOn = true;
     }
 
-    private void respond() throws IOException {
-        Request request = new RequestParser().parseRequest(clientSocket.getInputStream());;
-        String httpOK = "HTTP/1.1 200 OK\r\n\r\n";
-        clientSocket.getOutputStream().write(httpOK.getBytes());
-        clientSocket.close();
-    }
 
     public void turnOff() {
         try {
