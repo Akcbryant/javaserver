@@ -1,18 +1,20 @@
 package javaserver;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import org.junit.Before;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
 
 public class RequestParserTest {
 
     private static final String firstLine = "GET / HTTP/1.1\r\n";
     private static final String headers = "Accept: audio/*; q=0.2, audio/basic\n" +
-                     "Allow: GET, HEAD, PUT\n" +
-                     "Expires: Thu, 01 Dec 1994 16:00:00 GMT\n" +
-                     "From: testing@headers.org\r\n";
+                                          "Allow: GET, HEAD, PUT\n" +
+                                          "Expires: Thu, 01 Dec 1994 16:00:00 GMT\n" +
+                                          "From: testing@headers.org\r\n";
     private static final String body = "this is test body data\n";
     private String testString = firstLine + headers + body;
 
