@@ -7,17 +7,13 @@ import java.util.HashMap;
 
 public class ResponseBuilderTest {
 
-    private Request request;
     private Response response;
     private HashMap<String, String> headers = new HashMap<String, String>();
 
     @Test
     public void getRequestRespondsOK() {
-        Request request = new Request("GET", "/", "HTTP/1.1", headers, "");
-
-        Response response = new ResponseBuilder(request).buildResponse();
+        Response response = new ResponseBuilder().buildResponse();
 
         assertEquals(response.getStatusCode(), "200");
     }
-
 }

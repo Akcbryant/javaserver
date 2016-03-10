@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Worker implements Runnable {
-
     private Socket clientSocket;
 
     Worker(Socket clientSocket) {
@@ -16,7 +15,7 @@ public class Worker implements Runnable {
     public void run() {
         try {
             Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
-            Response response = new ResponseBuilder(request).buildResponse();
+            Response response = new RequestHandler(request).handleRequest();
             clientSocket.getOutputStream().write(response.toString().getBytes());
             clientSocket.close();
         } catch (IOException e) {
@@ -25,6 +24,8 @@ public class Worker implements Runnable {
     }
 
     private Response handleRequest(Request request) {
-
+        RequestHandler handler = new RequestHandler(request);
+        Response response = handler.handleRequest();
+        return response;
     }
 }
