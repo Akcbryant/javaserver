@@ -11,11 +11,11 @@ import java.io.ByteArrayInputStream;
 public class RequestParserTest {
 
     private static final String firstLine = "GET / HTTP/1.1\r\n";
-    private static final String headers = "Accept: audio/*; q=0.2, audio/basic\n" +
-                                          "Allow: GET, HEAD, PUT\n" +
-                                          "Expires: Thu, 01 Dec 1994 16:00:00 GMT\n" +
-                                          "From: testing@headers.org\r\n";
-    private static final String body = "this is test body data\n";
+    private static final String headers = "Accept: audio/*; q=0.2, audio/basic\r\n" +
+                                          "Allow: GET, HEAD, PUT\r\n" +
+                                          "Expires: Thu, 01 Dec 1994 16:00:00 GMT\r\n" +
+                                          "From: testing@headers.org\r\n\r\n";
+    private static final String body = "this is test body data\r\n";
     private String testString = firstLine + headers + body;
 
     Request request = createTestRequest(testString);

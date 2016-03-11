@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.Before;
 
-import java.io.*;
 import java.net.Socket;
 import java.net.ServerSocket;
 

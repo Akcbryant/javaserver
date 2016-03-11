@@ -50,4 +50,12 @@ public class Server {
             System.out.println("Exception caught when trying to close the Server" + e.toString());
         }
     }
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    public boolean isOn() {
+        return serverIsOn;
+    }
 }

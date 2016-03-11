@@ -17,7 +17,6 @@ public class RequestHandler {
 
     RequestHandler(Request request) {
         this.request = request;
-        System.out.println(request.toString());
     }
 
     public Response handleRequest() {
@@ -35,18 +34,17 @@ public class RequestHandler {
         }
     }
 
-    private void postRequest(Request request) {
+    public void postRequest(Request request) {
         try {
             Path path = Paths.get("test");
             byte[] bodyData = request.getBody().getBytes();
-            System.out.println(path);
             Files.write(path, bodyData);
         } catch (IOException e) {
             System.out.println(e.toString());
         }
     }
 
-    private void getRequest(Request request) {
+    public void getRequest(Request request) {
         Path path = Paths.get("test");
         try {
             byte[] data = Files.readAllBytes(path);

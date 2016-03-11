@@ -36,7 +36,10 @@ public class RequestParser {
         try {
             Scanner scanner = new Scanner(inputString).useDelimiter("\r\n");
             parseFirstLine(scanner.next());
-            headers = parseHeaders(scanner.next());
+            headers = parseHeaders(scanner);
+
+            scanner = new Scanner(inputString).useDelimiter("\r\n\r\n");
+            scanner.next();
             body = scanner.next();
         } catch (NoSuchElementException|IllegalStateException e) {
             System.out.println("There was an error parsing your request.");
@@ -51,14 +54,16 @@ public class RequestParser {
         version = scanner.next();
     }
 
-    private HashMap<String, String> parseHeaders(String headersString) throws NoSuchElementException, IllegalStateException {
-        Scanner scanner = new Scanner(headersString).useDelimiter("\n");
+    private HashMap<String, String> parseHeaders(Scanner scanner) throws NoSuchElementException, IllegalStateException {
 
         HashMap<String, String> headers = new HashMap<String, String>();
 
         while (scanner.hasNext()) {
             String[] nextString = scanner.next().split(":");
-            headers.put(nextString[0], nextString[1]);
+            if (nextString.length > 1) {
+                System.out.println(nextString[0]);
+                headers.put(nextString[0], nextString[1]);
+            }
         }
 
         return headers;
