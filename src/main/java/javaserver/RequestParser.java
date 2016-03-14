@@ -35,14 +35,16 @@ public class RequestParser {
     private void parseInput(String input) {
         try {
             Scanner scanner = new Scanner(inputString).useDelimiter("\r\n");
+
             parseFirstLine(scanner.next());
+
             headers = parseHeaders(scanner);
 
             scanner = new Scanner(inputString).useDelimiter("\r\n\r\n");
             scanner.next();
             body = scanner.next();
         } catch (NoSuchElementException|IllegalStateException e) {
-            System.out.println("There was an error parsing your request.");
+            System.out.println("RequestParser parseInput()");
         }
     }
 
@@ -61,10 +63,11 @@ public class RequestParser {
         while (scanner.hasNext()) {
             String[] nextString = scanner.next().split(":");
             if (nextString.length > 1) {
-                System.out.println(nextString[0]);
                 headers.put(nextString[0], nextString[1]);
             }
         }
+
+        System.out.println(headers);
 
         return headers;
     }
