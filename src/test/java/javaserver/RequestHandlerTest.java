@@ -16,5 +16,4 @@ public class RequestHandlerTest {
         assertEquals("200", response.getStatusCode());
         assertEquals("OK", response.getStatusMessage());
     }
-
 }
