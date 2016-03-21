@@ -67,8 +67,6 @@ public class RequestParser {
             }
         }
 
-        System.out.println(headers);
-
         return headers;
     }
 }

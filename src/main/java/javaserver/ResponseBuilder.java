@@ -12,4 +12,13 @@ public class ResponseBuilder {
 
         return response;
     }
+
+    public Response buildFailedResponse() {
+        response = new Response();
+
+        response.setStatusCode("404");
+        response.setStatusMessage("Not Found");
+
+        return response;
+    }
 }
