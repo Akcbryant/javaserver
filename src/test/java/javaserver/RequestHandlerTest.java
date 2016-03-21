@@ -8,16 +8,13 @@ import java.util.HashMap;
 
 public class RequestHandlerTest {
 
-    HashMap<String, String> headers = new HashMap<String, String>();
     RequestHandler requestHandler = new RequestHandler();
     Response response;
-    Request request;
+    Request request = new Request();
     Handler handler;
 
     @Test
     public void handleRequestAlwaysReturnAResponse() {
-        request = new Request("", "", "", headers, "");
-
         response = requestHandler.handleRequest(request);
 
         assertNotNull(response);
@@ -52,7 +49,7 @@ public class RequestHandlerTest {
     }
 
     private Handler determineHandler(String method) {
-        request = new Request(method, "/", "HTTP/1.1", headers, "");
+        request.setMethod(method);
         return requestHandler.determineHandler(request);
     }
 }
