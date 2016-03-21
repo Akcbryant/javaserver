@@ -14,14 +14,13 @@ public class ResponseBuilderTest {
     public void buildSuccessfulResponse() {
         Response response = new ResponseBuilder().buildResponse();
 
-        assertEquals(response.getStatusCode(), "200");
+        assertEquals(response.getStatus(), Status.OK);
     }
 
     @Test
     public void buildFailedResponse() {
         response = new ResponseBuilder().buildFailedResponse();
 
-        assertEquals(response.getStatusCode(), "404");
-        assertEquals(response.getStatusMessage(), "Not Found");
+        assertEquals(response.getStatus(), Status.NOTFOUND);
     }
 }

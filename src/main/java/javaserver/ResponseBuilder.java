@@ -7,8 +7,7 @@ public class ResponseBuilder {
     public Response buildResponse() {
         response = new Response();
 
-        response.setStatusCode("200");
-        response.setStatusMessage("OK");
+        response.setStatus(Status.OK);
 
         return response;
     }
@@ -16,8 +15,7 @@ public class ResponseBuilder {
     public Response buildFailedResponse() {
         response = new Response();
 
-        response.setStatusCode("404");
-        response.setStatusMessage("Not Found");
+        response.setStatus(Status.NOTFOUND);
 
         return response;
     }

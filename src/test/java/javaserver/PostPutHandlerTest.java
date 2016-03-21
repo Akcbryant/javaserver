@@ -15,16 +15,14 @@ public class PostPutHandlerTest {
     public void successfulWriteToFileReturnsAnOkResponse() {
         response = new PostPutHandlerWriteDataSucceeds().handleRequest(request);
 
-        assertEquals("200", response.getStatusCode());
-        assertEquals("OK", response.getStatusMessage());
+        assertEquals(Status.OK, response.getStatus());
     }
 
     @Test
     public void failureToWriteToFileReturnsAFailedResponse() {
         response = new PostPutHandlerWriteDataFailed().handleRequest(request);
 
-        assertEquals("404", response.getStatusCode());
-        assertEquals("Not Found", response.getStatusMessage());
+        assertEquals(Status.NOTFOUND, response.getStatus());
     }
 
     private class PostPutHandlerWriteDataFailed extends PostPutHandler {

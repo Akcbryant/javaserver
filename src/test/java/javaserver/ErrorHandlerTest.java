@@ -13,7 +13,6 @@ public class ErrorHandlerTest {
 
         Response response = new ErrorHandler().handleRequest(request);
 
-        assertEquals("404", response.getStatusCode());
-        assertEquals("Not Found", response.getStatusMessage());
+        assertEquals(Status.NOTFOUND, response.getStatus());
     }
 }

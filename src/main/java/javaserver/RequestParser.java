@@ -7,19 +7,9 @@ import java.util.HashMap;
 
 public class RequestParser {
 
-    private String inputString;
-    private Request request = new Request();
-
-    private String method = "";
-    private String path = "";
-    private String version = "";
-    private HashMap<String, String> headers = new HashMap<String, String>();
-    private String body = "";
-
     public Request parseRequest(InputStream input) {
-        inputString = convertInputStreamToString(input);
-        parseInput(inputString);
-        Request request = new Request(method, path, version, headers, body);
+        String inputString = convertInputStreamToString(input);
+        Request request = parseInput(inputString);
         return request;
     }
 
@@ -27,46 +17,69 @@ public class RequestParser {
         try {
             return new Scanner(input).useDelimiter("\\z").next();
         } catch (NoSuchElementException|IllegalStateException e) {
-            System.out.println("Input is non existent.");
+            return "";
         }
-        return "";
     }
 
-    private void parseInput(String input) {
+    private Request parseInput(String input) {
         try {
-            Scanner scanner = new Scanner(inputString).useDelimiter("\r\n");
+            String method = parseFirstLine(input, 0);
+            String path = parseFirstLine(input, 1);
+            String version = parseFirstLine(input, 2);
 
-            parseFirstLine(scanner.next());
+            HashMap<String, String> headers = parseHeaders(input);
 
-            headers = parseHeaders(scanner);
+            String body = getBody(input);
 
-            scanner = new Scanner(inputString).useDelimiter("\r\n\r\n");
-            scanner.next();
-            body = scanner.next();
+            return new Request(method, path, version, headers, body);
         } catch (NoSuchElementException|IllegalStateException e) {
-            System.out.println("RequestParser parseInput()");
+            return new Request();
         }
     }
 
-    private void parseFirstLine(String firstLineString) throws NoSuchElementException, IllegalStateException {
-        Scanner scanner = new Scanner(firstLineString).useDelimiter("\\s");
+    private String parseFirstLine(String input, int part) throws NoSuchElementException, IllegalStateException {
+        Scanner scanner = createScanner(input, "\r\n");
+        String firstLine = scanner.next();
+        scanner = createScanner(firstLine, "\\s");
 
-        method = scanner.next();
-        path = scanner.next();
-        version = scanner.next();
+        for (int i = 0; i < part; i++) {
+            scanner.next();
+        }
+        return scanner.next();
     }
 
-    private HashMap<String, String> parseHeaders(Scanner scanner) throws NoSuchElementException, IllegalStateException {
+    private HashMap<String, String> parseHeaders(String input) {
+        try {
+            Scanner scanner = createScanner(input, "\r\n");
+            scanner.next();
 
-        HashMap<String, String> headers = new HashMap<String, String>();
+            HashMap<String, String> headers = new HashMap<String, String>();
 
-        while (scanner.hasNext()) {
-            String[] nextString = scanner.next().split(":");
-            if (nextString.length > 1) {
-                headers.put(nextString[0], nextString[1]);
+            while (scanner.hasNext()) {
+                String[] nextString = scanner.next().split(":");
+                if (nextString.length > 1) {
+                    headers.put(nextString[0], nextString[1]);
+                }
             }
+
+            return headers;
+        } catch (NoSuchElementException|IllegalStateException e) {
+            return new HashMap<String, String>();
+        }
+    }
+
+    private String getBody(String input) {
+        try {
+            Scanner scanner = createScanner(input, "\r\n\r\n");
+            scanner.next();
+            return scanner.next();
+        } catch (NoSuchElementException|IllegalStateException e) {
+            return "";
         }
 
-        return headers;
+    }
+
+    private Scanner createScanner(String input, String delimiter) {
+        return new Scanner(input).useDelimiter(delimiter);
     }
 }

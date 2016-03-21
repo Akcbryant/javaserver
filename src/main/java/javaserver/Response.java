@@ -5,8 +5,7 @@ import java.util.HashMap;
 public class Response {
 
     private String version = "HTTP/1.1";
-    private String statusCode = "";
-    private String statusMessage = "";
+    private Status status = Status.EMPTY;
     private String headers = "";
     private String body = "";
 
@@ -14,10 +13,9 @@ public class Response {
 
     }
 
-    Response(String version, String statusCode, String statusMessage, String headers, String body) {
+    Response(String version, Status status, String headers, String body) {
         this.version = version;
-        this.statusCode = statusCode;
-        this.statusMessage = statusMessage;
+        this.status = status;
         this.headers = headers;
         this.body = body;
     }
@@ -26,12 +24,8 @@ public class Response {
         return version;
     }
 
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public String getStatusMessage() {
-        return statusMessage;
+    public Status getStatus() {
+        return status;
     }
 
     public String headers() {
@@ -46,12 +40,8 @@ public class Response {
         this.version = version;
     }
 
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void setHeaders(String headers) {
@@ -63,7 +53,7 @@ public class Response {
     }
 
     public String toString() {
-        return version + " " + statusCode + " " + statusMessage + "\r\n" + headers + "\r\n" + body + "\r\n";
+        return version + " " + status + "\r\n" + headers + "\r\n" + body + "\r\n";
     }
 
 }
