@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.nio.file.Files;
 import java.io.IOException;
 
-public class Get extends Handler {
+public class GetHandler extends Handler {
 
     public Response handleRequest(Request request) {
         if (allowedPaths.contains(request.getPath())) {
             try {
-                byte[] data = Files.readAllBytes(path);
-                String dataString = new String(data);
+                String dataString = getData();
                 response.setBody(dataString);
             } catch (IOException e) {
                 System.out.println(e.toString());
@@ -20,5 +19,10 @@ public class Get extends Handler {
             response = new ResponseBuilder().buildFailedResponse();
         }
         return response;
+    }
+
+    public String getData() throws IOException {
+        byte[] data = Files.readAllBytes(path);
+        return new String(data);
     }
 }

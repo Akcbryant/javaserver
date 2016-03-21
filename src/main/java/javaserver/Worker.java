@@ -15,7 +15,7 @@ public class Worker implements Runnable {
     public void run() {
         try {
             Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
-            Response response = new RequestHandler(request).handleRequest();
+            Response response = new RequestHandler().handleRequest(request);
             clientSocket.getOutputStream().write(response.toString().getBytes());
             clientSocket.close();
         } catch (IOException e) {
@@ -23,9 +23,8 @@ public class Worker implements Runnable {
         }
     }
 
-    private Response handleRequest(Request request) {
-        RequestHandler handler = new RequestHandler(request);
-        Response response = handler.handleRequest();
+    private Response handleRequest(Request request) { 
+        Response response = new RequestHandler().handleRequest(request);
         return response;
     }
 }

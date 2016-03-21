@@ -1,17 +1,21 @@
 package javaserver;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.IOException;
 
-public class Delete extends Handler {
+public class DeleteHandler extends Handler {
 
     public Response handleRequest(Request request) {
         try {
-            Files.delete(path);
+            deleteFile(path);
         } catch (IOException e) {
             response = new ResponseBuilder().buildFailedResponse();
-            System.out.println(e.toString());
         }
         return response;
+    }
+
+    public void deleteFile(Path path) throws IOException {
+        Files.delete(path);
     }
 }

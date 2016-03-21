@@ -3,17 +3,20 @@ package javaserver;
 import java.nio.file.Files;
 import java.io.IOException;
 
-public class PostPut extends Handler {
+public class PostPutHandler extends Handler {
 
 
     public Response handleRequest(Request request) {
         try {
-            byte[] bodyData = request.getBody().getBytes();
-            Files.write(path, bodyData);
+            writeData(request.getBody());
         } catch (IOException e) {
             response = new ResponseBuilder().buildFailedResponse();
-            System.out.println(e.toString());
         }
         return response;
+    }
+
+    public void writeData(String dataString) throws IOException {
+        byte[] bodyData = dataString.getBytes();
+        Files.write(path, bodyData);
     }
 }
