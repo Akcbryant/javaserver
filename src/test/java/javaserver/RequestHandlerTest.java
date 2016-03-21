@@ -38,6 +38,13 @@ public class RequestHandlerTest {
     }
 
     @Test
+    public void determineHandlerReturnsPostPutHandlerWhenRequestIsPut() {
+        handler = determineHandler("PUT");
+
+        assertEquals(handler.getClass(), new PostPutHandler().getClass());
+    }
+
+    @Test
     public void determineHandlerReturnsDeleteHandlerWhenRequestIsDelete() {
         handler = determineHandler("DELETE");
 
