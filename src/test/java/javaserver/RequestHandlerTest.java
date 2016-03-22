@@ -48,8 +48,16 @@ public class RequestHandlerTest {
         assertEquals(handler.getClass(), new DeleteHandler().getClass());
     }
 
+    @Test
+    public void determineHandlerReturnsOptionsHandlerWhenRequestIsOptions() {
+        handler = determineHandler("OPTIONS");
+
+        assertEquals(handler.getClass(), new OptionsHandler().getClass());
+    }
+
     private Handler determineHandler(String method) {
         request.setMethod(method);
         return requestHandler.determineHandler(request);
     }
+
 }

@@ -28,7 +28,7 @@ public class Response {
         return status;
     }
 
-    public String headers() {
+    public String getHeaders() {
         return headers;
     }
 

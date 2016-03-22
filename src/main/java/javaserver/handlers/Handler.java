@@ -10,7 +10,7 @@ public abstract class Handler {
 
     public Response response = new ResponseBuilder().buildResponse();
 
-    static final List allowedPaths = Arrays.asList("/", "/form");
+    static final List allowedPaths = Arrays.asList("/", "/form", "/method_options");
     static final Path path = Paths.get("./test");
 
     public Response handleRequest(Request request) {
