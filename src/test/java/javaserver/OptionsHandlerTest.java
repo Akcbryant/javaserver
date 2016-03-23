@@ -12,7 +12,7 @@ public class OptionsHandlerTest {
 
     @Test
     public void optionsHandlerGetsOptionsForRoute() {
-        request.setPath("/form");
+        request.setUri("/form");
         response = handler.handleRequest(request);
 
         assertTrue(response.getHeaders().contains("GET"));

@@ -10,7 +10,7 @@ public class Router {
 
     Router() {
         routes = new HashMap<String, String[]>();
-        routes.put("GET", new String[]{"/", "/form", "/method_options"});
+        routes.put("GET", new String[]{"/", "/form", "/method_options", "/parameters"});
         routes.put("HEAD", new String[]{"/method_options"});
         routes.put("POST", new String[]{"/form", "/method_options"});
         routes.put("OPTIONS", new String[]{"/", "/form", "/method_options"});
@@ -22,22 +22,23 @@ public class Router {
         this.routes = routes;
     }
 
-    public boolean pathIsAllowed(String method, String path) {
+    public boolean uriIsAllowed(String method, String uri) {
         String[] availableRoutes = routes.get(method);
+        uri = uri.split("\\?")[0];
 
         if (availableRoutes != null) {
             List routesList = Arrays.asList(availableRoutes);
-            return routesList.contains(path);
+            return routesList.contains(uri);
         } else {
             return false;
         }
     }
 
-    public String availableMethods(String path) {
+    public String availableMethods(String uri) {
         String availableMethods = "";
 
         for (Map.Entry<String, String[]> entry : routes.entrySet()) {
-            if (Arrays.asList(entry.getValue()).contains(path)) {
+            if (Arrays.asList(entry.getValue()).contains(uri)) {
                 availableMethods += entry.getKey() + ",";
             }
         }
@@ -49,7 +50,6 @@ public class Router {
         if (string != null && string.length() > 0) {
             string = string.substring(0, string.length()-1);
         }
-
         return string;
     }
 }

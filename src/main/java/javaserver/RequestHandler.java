@@ -9,11 +9,20 @@ public class RequestHandler {
     private Response response;
     private Router router = new Router();
     private String method;
+    private ParameterDecoder decoder = new ParameterDecoder();
 
     public Response handleRequest(Request request) {
         Handler handler = determineHandler(request);
 
-        return handler.handleRequest(request);
+        Response response = handler.handleRequest(request);
+
+        String uri = request.getUri();
+        if (decoder.hasParameters(uri)) {
+            String body = decoder.decodeURI(uri);
+            response.setBody(body);
+        }
+
+        return response;
     }
 
     public Handler determineHandler(Request request) {

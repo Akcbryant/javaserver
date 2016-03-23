@@ -11,17 +11,17 @@ public class RouterTest {
 
     @Test
     public void getMethodIsAllowedOnRootRoute() {
-        assertTrue(router.pathIsAllowed("GET", "/"));
+        assertTrue(router.uriIsAllowed("GET", "/"));
     }
 
     @Test
     public void deleteMethodIsNotAllowedOnRootRoute() {
-        assertFalse(router.pathIsAllowed("DELETE", "/"));
+        assertFalse(router.uriIsAllowed("DELETE", "/"));
     }
 
     @Test
     public void passingInWrongMethodReturnsFalse() {
-        assertFalse(router.pathIsAllowed("FOOBAR", "/"));
+        assertFalse(router.uriIsAllowed("FOOBAR", "/"));
     }
 
     @Test

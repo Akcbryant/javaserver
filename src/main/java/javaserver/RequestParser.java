@@ -24,14 +24,14 @@ public class RequestParser {
     private Request parseInput(String input) {
         try {
             String method = parseFirstLine(input, 0);
-            String path = parseFirstLine(input, 1);
+            String uri = parseFirstLine(input, 1);
             String version = parseFirstLine(input, 2);
 
             HashMap<String, String> headers = parseHeaders(input);
 
             String body = getBody(input);
 
-            return new Request(method, path, version, headers, body);
+            return new Request(method, uri, version, headers, body);
         } catch (NoSuchElementException|IllegalStateException e) {
             return new Request();
         }

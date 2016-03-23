@@ -15,7 +15,7 @@ public class OptionsHandler extends Handler {
     public Response handleRequest(Request request) {
         Response response = new ResponseBuilder().buildResponse();
 
-        String headers = "Allow:" + router.availableMethods(request.getPath());
+        String headers = "Allow:" + router.availableMethods(request.getUri());
         response.setHeaders(headers);
 
         return response;

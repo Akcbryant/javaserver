@@ -60,4 +60,13 @@ public class RequestHandlerTest {
         return requestHandler.determineHandler(request);
     }
 
+    @Test
+    public void whenThereAreParametersSetThemAsResponseBody() {
+        request = new Request();
+        request.setUri("/parameters?variable1=%20%3C%2C%20&variable2=stuff");
+
+        response = requestHandler.handleRequest(request);
+
+        assertEquals("variable1 =  <, \r\nvariable2 = stuff", response.getBody());
+    }
 }

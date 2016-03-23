@@ -8,7 +8,7 @@ import java.io.IOException;
 public class GetHandler extends Handler {
 
     public Response handleRequest(Request request) {
-        if (allowedPaths.contains(request.getPath())) {
+        if (router.uriIsAllowed("GET", request.getUri())) {
             try {
                 String dataString = getData();
                 response.setBody(dataString);
