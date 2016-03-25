@@ -6,20 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Router {
+
     private HashMap<String, String[]> routes;
+    private HashMap<String, String> redirects;
 
-    Router() {
-        routes = new HashMap<String, String[]>();
-        routes.put("GET", new String[]{"/", "/form", "/method_options", "/parameters"});
-        routes.put("HEAD", new String[]{"/method_options"});
-        routes.put("POST", new String[]{"/form", "/method_options"});
-        routes.put("OPTIONS", new String[]{"/", "/form", "/method_options"});
-        routes.put("PUT", new String[]{"/form", "/method_options"});
-        routes.put("DELETE", new String[]{"/form"});
-    }
-
-    Router(HashMap<String, String[]> routes) {
-        this.routes = routes;
+    Router(Routes routes) {
+        this.routes = routes.routes;
+        this.redirects = routes.redirects;
     }
 
     public boolean uriIsAllowed(String method, String uri) {
@@ -44,6 +37,17 @@ public class Router {
         }
 
         return stripLastLetter(availableMethods);
+    }
+
+    public boolean isRedirect(String uri) {
+        return redirects.containsKey(uri);
+    }
+
+    public String getRedirectHeader(String uri) {
+        if (isRedirect(uri)) {
+            return "Location: " + redirects.get(uri);
+        }
+        return "";
     }
 
     private String stripLastLetter(String string) {

@@ -6,13 +6,24 @@ import org.junit.Test;
 
 public class ErrorHandlerTest {
 
+    ErrorHandler errorHandler;
+    Request request = new Request();
+    Response response;
+
     @Test
-    public void errorHandlerAlwaysReturnsNotFoundResponse() {
-        HashMap<String, String> headers = new HashMap<String, String>();
-        Request request = new Request();
+    public void errorHandlerReturnsNotFoundResponse() {
+        errorHandler = new ErrorHandler(Status.NotFound);
+        response = errorHandler.handleRequest(request);
 
-        Response response = new ErrorHandler().handleRequest(request);
+        assertEquals(Status.NotFound, response.getStatus());
+    }
 
-        assertEquals(Status.NOTFOUND, response.getStatus());
+    @Test
+    public void errorHandlerReturnsMethodNotAllowedResponse() {
+        errorHandler = new ErrorHandler(Status.MethodNotAllowed);
+
+        response = errorHandler.handleRequest(request);
+
+        assertEquals(Status.MethodNotAllowed, response.getStatus());
     }
 }

@@ -12,15 +12,22 @@ public class ResponseBuilderTest {
 
     @Test
     public void buildSuccessfulResponse() {
-        Response response = new ResponseBuilder().buildResponse();
+        Response response = new ResponseBuilder().buildResponse(Status.Ok);
 
-        assertEquals(response.getStatus(), Status.OK);
+        assertEquals(Status.Ok, response.getStatus());
     }
 
     @Test
-    public void buildFailedResponse() {
-        response = new ResponseBuilder().buildFailedResponse();
+    public void buildNotFoundResponse() {
+        response = new ResponseBuilder().buildResponse(Status.NotFound);
 
-        assertEquals(response.getStatus(), Status.NOTFOUND);
+        assertEquals(Status.NotFound, response.getStatus());
+    }
+
+    @Test
+    public void buildRedirectResponse() {
+        response = new ResponseBuilder().buildResponse(Status.Redirect);
+
+        assertEquals(Status.Redirect, response.getStatus());
     }
 }

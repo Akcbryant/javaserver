@@ -22,41 +22,42 @@ public class RequestHandlerTest {
 
     @Test
     public void determineHandlerReturnsGetHandlerWhenRequestIsGet() {
-        handler = determineHandler("GET");
+        handler = determineHandler("GET", "/");
 
         assertEquals(handler.getClass(), new GetHandler().getClass());
     }
 
     @Test
     public void determineHandlerReturnsPostPutHandlerWhenRequestIsPost() {
-        handler = determineHandler("POST");
+        handler = determineHandler("POST", "/form");
 
         assertEquals(handler.getClass(), new PostPutHandler().getClass());
     }
 
     @Test
     public void determineHandlerReturnsPostPutHandlerWhenRequestIsPut() {
-        handler = determineHandler("PUT");
+        handler = determineHandler("PUT", "/form");
 
         assertEquals(handler.getClass(), new PostPutHandler().getClass());
     }
 
     @Test
     public void determineHandlerReturnsDeleteHandlerWhenRequestIsDelete() {
-        handler = determineHandler("DELETE");
+        handler = determineHandler("DELETE", "/form");
 
         assertEquals(handler.getClass(), new DeleteHandler().getClass());
     }
 
     @Test
     public void determineHandlerReturnsOptionsHandlerWhenRequestIsOptions() {
-        handler = determineHandler("OPTIONS");
+        handler = determineHandler("OPTIONS", "/form");
 
         assertEquals(handler.getClass(), new OptionsHandler().getClass());
     }
 
-    private Handler determineHandler(String method) {
+    private Handler determineHandler(String method, String uri) {
         request.setMethod(method);
+        request.setUri(uri);
         return requestHandler.determineHandler(request);
     }
 
@@ -68,5 +69,28 @@ public class RequestHandlerTest {
         response = requestHandler.handleRequest(request);
 
         assertEquals("variable1 =  <, \r\nvariable2 = stuff", response.getBody());
+    }
+
+    @Test
+    public void testPathFailure() {
+        request = new Request();
+        request.setMethod("GET");
+        request.setUri("/foobar");
+
+        response = requestHandler.handleRequest(request);
+
+        assertEquals(Status.NotFound, response.getStatus());
+    }
+
+    @Test
+    public void handleRequest_GivenRedirectRequest_ResponseContainsLocationHeader() {
+        request = new Request();
+        request.setMethod("GET");
+        request.setUri("/redirect");
+
+        response = requestHandler.handleRequest(request);
+
+        assertEquals(Status.Redirect, response.getStatus());
+        assertEquals("Location: http://localhost:5000/", response.getHeaders());
     }
 }

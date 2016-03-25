@@ -10,7 +10,7 @@ public class PostPutHandler extends Handler {
         try {
             writeData(request.getBody());
         } catch (IOException e) {
-            response = new ResponseBuilder().buildFailedResponse();
+            response = new ResponseBuilder().buildResponse(Status.NotFound);
         }
         return response;
     }

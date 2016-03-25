@@ -15,15 +15,15 @@ public class Worker implements Runnable {
     public void run() {
         try {
             Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
-            Response response = new RequestHandler().handleRequest(request);
-            clientSocket.getOutputStream().write(response.toString().getBytes());
+            Response response = handleRequest(request);
+            clientSocket.getOutputStream().write(response.toString().getBytes("UTF-8"));
             clientSocket.close();
         } catch (IOException e) {
 
         }
     }
 
-    private Response handleRequest(Request request) { 
+    private Response handleRequest(Request request) {
         Response response = new RequestHandler().handleRequest(request);
         return response;
     }

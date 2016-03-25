@@ -2,7 +2,13 @@ package javaserver;
 
 public class ErrorHandler extends Handler {
 
+    Response response;
     public Response handleRequest(Request request) {
-        return new ResponseBuilder().buildFailedResponse();
+        return response;
+    }
+
+    ErrorHandler(Status status) {
+        response = new ResponseBuilder().buildResponse(Status.NotFound);
+        response.setStatus(status);
     }
 }

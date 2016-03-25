@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class OptionsHandlerTest {
 
-    Router router = new Router();
+    Router router = new Router(new CobSpecRoutes());
     OptionsHandler handler = new OptionsHandler(router);
     Request request = new Request();
     Response response;

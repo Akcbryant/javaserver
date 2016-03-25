@@ -2,9 +2,11 @@ package javaserver;
 
 public enum Status {
 
-    EMPTY(""),
-    OK("200 OK"),
-    NOTFOUND("404 Not Found");
+    Empty(""),
+    Ok("200 OK"),
+    Redirect("302 Redirect"),
+    NotFound("404 Not Found"),
+    MethodNotAllowed("405 Method not allowed");
 
     private final String statusMessage;
 

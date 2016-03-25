@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class RouterTest {
 
-    private Router router = new Router();
+    private Router router = new Router(new CobSpecRoutes());
 
     @Test
     public void getMethodIsAllowedOnRootRoute() {
@@ -27,5 +27,25 @@ public class RouterTest {
     @Test
     public void givenRootDirectoryReturnAvailableMethods() {
         assertEquals("GET,OPTIONS", router.availableMethods("/"));
+    }
+
+    @Test
+    public void isRedirect_GivenRedirectUri_True() {
+        assertTrue(router.isRedirect("/redirect"));
+    }
+
+    @Test
+    public void isRedirect_GivenNonRedirectUri_False() {
+        assertFalse(router.isRedirect("/"));
+    }
+
+    @Test
+    public void redirectRoute_GivenRedirectUri_route() {
+        assertEquals("Location: http://localhost:5000/", router.getRedirectHeader("/redirect"));
+    }
+
+    @Test
+    public void getRedirectRoute_GivenNonRedirectUri_EmptyString() {
+        assertEquals("", router.getRedirectHeader("/"));
     }
 }

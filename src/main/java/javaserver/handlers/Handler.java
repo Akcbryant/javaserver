@@ -8,8 +8,7 @@ import java.util.List;
 
 public abstract class Handler {
 
-    Response response = new ResponseBuilder().buildResponse();
-    Router router = new Router();
+    Response response = new ResponseBuilder().buildResponse(Status.Ok);
 
     static final Path path = Paths.get("./test");
 
