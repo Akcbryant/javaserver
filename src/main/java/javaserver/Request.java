@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Request {
 
     private String method = "";
-    private String path = "";
+    private String uri = "";
     private String version = "";
     private HashMap<String, String> headers = new HashMap<String, String>();
     private String body = "";
@@ -14,11 +14,11 @@ public class Request {
 
     }
 
-    Request(String method, String path, String version,
+    Request(String method, String uri, String version,
             HashMap<String, String> headers,
             String body) {
         this.method = method;
-        this.path = path;
+        this.uri = uri;
         this.version = version;
         this.headers = headers;
         this.body = body;
@@ -28,8 +28,8 @@ public class Request {
         return method;
     }
 
-    public String getPath() {
-        return path;
+    public String getUri() {
+        return uri;
     }
 
     public String getVersion() {
@@ -48,8 +48,8 @@ public class Request {
         this.method = method;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public void setVersion(String version) {
@@ -65,6 +65,6 @@ public class Request {
     }
 
     public String toString() {
-        return method + " " + path + " " + version + "\r\n" + headers.toString() + "\r\n" + body + "\r\n";
+        return method + " " + uri + " " + version + "\r\n" + headers.toString() + "\r\n" + body + "\r\n";
     }
 }

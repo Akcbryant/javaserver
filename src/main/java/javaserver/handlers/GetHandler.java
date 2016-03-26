@@ -8,15 +8,11 @@ import java.io.IOException;
 public class GetHandler extends Handler {
 
     public Response handleRequest(Request request) {
-        if (allowedPaths.contains(request.getPath())) {
-            try {
-                String dataString = getData();
-                response.setBody(dataString);
-            } catch (IOException e) {
-                System.out.println(e.toString());
-            }
-        } else {
-            response = new ResponseBuilder().buildFailedResponse();
+        try {
+            String dataString = getData();
+            response.setBody(dataString);
+        } catch (IOException e) {
+
         }
         return response;
     }

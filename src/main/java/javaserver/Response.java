@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Response {
 
     private String version = "HTTP/1.1";
-    private Status status = Status.EMPTY;
+    private Status status = Status.Empty;
     private String headers = "";
     private String body = "";
 
@@ -28,7 +28,7 @@ public class Response {
         return status;
     }
 
-    public String headers() {
+    public String getHeaders() {
         return headers;
     }
 

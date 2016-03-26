@@ -8,9 +8,8 @@ import java.util.List;
 
 public abstract class Handler {
 
-    public Response response = new ResponseBuilder().buildResponse();
+    Response response = new ResponseBuilder().buildResponse(Status.Ok);
 
-    static final List allowedPaths = Arrays.asList("/", "/form");
     static final Path path = Paths.get("./test");
 
     public Response handleRequest(Request request) {

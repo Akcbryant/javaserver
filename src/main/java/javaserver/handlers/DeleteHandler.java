@@ -10,7 +10,7 @@ public class DeleteHandler extends Handler {
         try {
             deleteFile(path);
         } catch (IOException e) {
-            response = new ResponseBuilder().buildFailedResponse();
+            response = new ResponseBuilder().buildResponse(Status.NotFound);
         }
         return response;
     }

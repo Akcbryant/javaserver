@@ -21,15 +21,6 @@ public class GetHandlerTest {
         assertEquals("Test String", response.getBody());
     }
 
-    @Test
-    public void testPathFailure() {
-        request = new Request("GET", "/foobar", "HTTP/1.1", headers, "");
-
-        response = new GetHandler().handleRequest(request);
-
-        assertEquals(Status.NOTFOUND, response.getStatus());
-    }
-
     private class GetHandlerMock extends GetHandler {
 
         @Override

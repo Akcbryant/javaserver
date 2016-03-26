@@ -26,31 +26,31 @@ public class RequestParserTest {
     }
 
     @Test
-    public void pathIsParsed() {
-        assertEquals("Request path not properly parsed.", "/", request.getPath());
+    public void uriIsParsed() {
+        assertEquals("/", request.getUri());
     }
 
     @Test
     public void versionIsParsed() {
-        assertEquals("Request version not properly parsed.", "HTTP/1.1", request.getVersion());
+        assertEquals("HTTP/1.1", request.getVersion());
     }
 
 
     @Test
     public void headersAreParsed() {
-        assertEquals("Headers are not properly parsed", 4, request.getHeaders().size());
+        assertEquals(4, request.getHeaders().size());
     }
 
     @Test
     public void bodyIsParsed() {
-        assertEquals("Body is not parsed properly.", body, request.getBody());
+        assertEquals(body, request.getBody());
     }
 
     @Test
     public void emptyInput() {
         request = createTestRequest("");
 
-        assertEquals("An empty request makes everything empty.", "", request.getMethod());
+        assertEquals("", request.getMethod());
     }
 
     @Test
@@ -58,8 +58,8 @@ public class RequestParserTest {
         testString = firstLine + headers;
         request = createTestRequest(testString);
 
-        assertFalse("First line should be set.", request.getMethod().isEmpty());
-        assertTrue("Body should be empty.", request.getBody().isEmpty());
+        assertFalse(request.getMethod().isEmpty());
+        assertTrue(request.getBody().isEmpty());
     }
 
     @Test
@@ -67,9 +67,9 @@ public class RequestParserTest {
         testString = firstLine;
         request = createTestRequest(testString);
 
-        assertFalse("First line should be set.", request.getVersion().isEmpty());
-        assertTrue("Headers should be empty.", request.getHeaders().isEmpty());
-        assertTrue("Body should be empty.", request.getBody().isEmpty());
+        assertFalse(request.getVersion().isEmpty());
+        assertTrue(request.getHeaders().isEmpty());
+        assertTrue(request.getBody().isEmpty());
     }
 
     private Request createTestRequest(String input) {
