@@ -1,51 +1,58 @@
 package javaserver;
 
+import javaserver.handlers.Handler;
+import javaserver.handlers.Response;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
+import org.junit.Before;
 
 public class RouterTest {
 
-    private Router router = new Router(new CobSpecRoutes());
+    Router router = new Router(".");
 
-    @Test
-    public void getMethodIsAllowedOnRootRoute() {
-        assertTrue(router.uriIsAllowed("GET", "/"));
+    @Before
+    public void setUp() {
+        router.addRoute(new Route("/form", "GET", new MockHandler()));
+        router.addRoute(new Route("/form", "POST", new MockHandler()));
     }
 
     @Test
-    public void deleteMethodIsNotAllowedOnRootRoute() {
-        assertFalse(router.uriIsAllowed("DELETE", "/"));
+    public void addRoute_GivenRoute_addsRoute() {
+        assertTrue(router.hasRoute("/form"));
     }
 
     @Test
-    public void passingInWrongMethodReturnsFalse() {
-        assertFalse(router.uriIsAllowed("FOOBAR", "/"));
+    public void isValidUri_GivenInvalidRoute_False() {
+        assertFalse(router.hasRoute("/foobar"));
     }
 
     @Test
-    public void givenRootDirectoryReturnAvailableMethods() {
-        assertEquals("GET,OPTIONS", router.availableMethods("/"));
+    public void isValidUri_GivenValideRoute_True() {
+        assertTrue(router.hasRoute("/form"));
     }
 
     @Test
-    public void isRedirect_GivenRedirectUri_True() {
-        assertTrue(router.isRedirect("/redirect"));
+    public void availableMethods_GivenValidRoute_ReturnsStringOfMethods() {
+        String availableMethods = router.availableMethods("/form");
+
+        assertEquals("GET,POST,OPTIONS", availableMethods);
     }
 
     @Test
-    public void isRedirect_GivenNonRedirectUri_False() {
-        assertFalse(router.isRedirect("/"));
+    public void availableMethods_GivenRouteWithNoMethods_ReturnsEmptyString() {
+        String availableMethods = router.availableMethods("failure");
+
+        assertEquals("OPTIONS", availableMethods);
     }
 
-    @Test
-    public void redirectRoute_GivenRedirectUri_route() {
-        assertEquals("Location: http://localhost:5000/", router.getRedirectHeader("/redirect"));
-    }
+    private class MockHandler implements Handler {
 
-    @Test
-    public void getRedirectRoute_GivenNonRedirectUri_EmptyString() {
-        assertEquals("", router.getRedirectHeader("/"));
+        public Response handleRequest(Request request) {
+            return null;
+        }
     }
 }

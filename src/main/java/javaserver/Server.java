@@ -12,9 +12,11 @@ public class Server {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private boolean serverIsOn = false;
+    private Router router;
 
-    Server(int port) {
+    Server(int port, Router router) {
         this.port = port;
+        this.router = router;
     }
 
     Server(int port, ServerSocket serverSocket) {
@@ -27,7 +29,7 @@ public class Server {
             listenOnPort();
             while (serverIsOn) {
                 clientSocket = serverSocket.accept();
-                Runnable worker = new Worker(clientSocket);
+                Runnable worker = new Worker(clientSocket, router);
                 new Thread(worker).start();
             }
         } catch (IOException e) {

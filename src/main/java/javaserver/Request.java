@@ -10,11 +10,10 @@ public class Request {
     private HashMap<String, String> headers = new HashMap<String, String>();
     private String body = "";
 
-    Request() {
-
+    public Request() {
     }
 
-    Request(String method, String uri, String version,
+    public Request(String method, String uri, String version,
             HashMap<String, String> headers,
             String body) {
         this.method = method;

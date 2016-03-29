@@ -1,4 +1,4 @@
-package javaserver;
+package javaserver.handlers;
 
 public enum Status {
 
@@ -6,7 +6,8 @@ public enum Status {
     Ok("200 OK"),
     Redirect("302 Redirect"),
     NotFound("404 Not Found"),
-    MethodNotAllowed("405 Method not allowed");
+    MethodNotAllowed("405 Method not allowed"),
+    ServerError("500 Internal Server Error");
 
     private final String statusMessage;
 

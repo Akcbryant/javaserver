@@ -1,18 +1,12 @@
-package javaserver;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+package javaserver.handlers;
 
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Handler {
+import javaserver.Request;
 
-    Response response = new ResponseBuilder().buildResponse(Status.Ok);
+public interface Handler {
 
-    static final Path path = Paths.get("./test");
+    public Response handleRequest(Request request);
 
-    public Response handleRequest(Request request) {
-        return response;
-    }
 }

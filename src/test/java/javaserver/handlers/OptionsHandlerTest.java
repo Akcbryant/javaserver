@@ -1,25 +1,23 @@
-package javaserver;
+package javaserver.handlers;
+
+import javaserver.Request;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class OptionsHandlerTest {
 
-    Router router = new Router(new CobSpecRoutes());
-    OptionsHandler handler = new OptionsHandler(router);
+    OptionsHandler handler = new OptionsHandler("GET, POST, OPTIONS");
     Request request = new Request();
     Response response;
 
     @Test
     public void optionsHandlerGetsOptionsForRoute() {
-        request.setUri("/form");
         response = handler.handleRequest(request);
 
         assertTrue(response.getHeaders().contains("GET"));
         assertTrue(response.getHeaders().contains("POST"));
         assertTrue(response.getHeaders().contains("OPTIONS"));
-        assertTrue(response.getHeaders().contains("PUT"));
-        assertTrue(response.getHeaders().contains("DELETE"));
         assertTrue(response.getHeaders().contains("Allow:"));
     }
 }

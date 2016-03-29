@@ -1,21 +1,20 @@
-package javaserver;
+package javaserver.handlers;
 
-public class OptionsHandler extends Handler {
+import javaserver.Request;
 
-    Router router;
+public class OptionsHandler implements Handler {
 
-    OptionsHandler() {
-        router = new Router(new CobSpecRoutes());
-    }
+    String availableMethods;
 
-    OptionsHandler(Router router) {
-        this.router = router;
+    public OptionsHandler(String availableMethods) {
+        this.availableMethods = availableMethods;
     }
 
     public Response handleRequest(Request request) {
-        Response response = new ResponseBuilder().buildResponse(Status.Ok);
+        Response response = new Response();
 
-        String headers = "Allow:" + router.availableMethods(request.getUri());
+        response.setStatus(Status.Ok);
+        String headers = "Allow:" + availableMethods;
         response.setHeaders(headers);
 
         return response;

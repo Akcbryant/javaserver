@@ -1,4 +1,6 @@
-package javaserver;
+package javaserver.handlers;
+
+import javaserver.Request;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -18,7 +20,18 @@ public class GetHandlerTest {
 
         response = new GetHandlerMock().handleRequest(request);
 
+        assertEquals(Status.Ok, response.getStatus());
         assertEquals("Test String", response.getBody());
+    }
+
+    @Test
+    public void testForFailedReading() {
+        request = new Request();
+
+        response = new GetHandlerFailsMock().handleRequest(request);
+
+        assertEquals(Status.Ok, response.getStatus());
+        assertEquals("", response.getBody());
     }
 
     private class GetHandlerMock extends GetHandler {
@@ -26,6 +39,14 @@ public class GetHandlerTest {
         @Override
         public String getData() {
             return "Test String";
+        }
+    }
+
+    private class GetHandlerFailsMock extends GetHandler {
+
+        @Override
+        public String getData() throws IOException {
+            throw new IOException();
         }
     }
 

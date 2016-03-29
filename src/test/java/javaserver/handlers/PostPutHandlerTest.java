@@ -1,4 +1,6 @@
-package javaserver;
+package javaserver.handlers;
+
+import javaserver.Request;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -22,7 +24,7 @@ public class PostPutHandlerTest {
     public void failureToWriteToFileReturnsAFailedResponse() {
         response = new PostPutHandlerWriteDataFailed().handleRequest(request);
 
-        assertEquals(Status.NotFound, response.getStatus());
+        assertEquals(Status.ServerError, response.getStatus());
     }
 
     private class PostPutHandlerWriteDataFailed extends PostPutHandler {

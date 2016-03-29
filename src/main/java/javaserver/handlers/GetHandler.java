@@ -1,18 +1,25 @@
-package javaserver;
+package javaserver.handlers;
 
-import java.util.Arrays;
+import javaserver.Request;
 
-import java.nio.file.Files;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class GetHandler extends Handler {
+public class GetHandler implements Handler {
+
+    static final Path path = Paths.get("./test");
 
     public Response handleRequest(Request request) {
+        Response response = new Response();
+
         try {
+            response.setStatus(Status.Ok);
             String dataString = getData();
             response.setBody(dataString);
         } catch (IOException e) {
-
+            response.setStatus(Status.Ok);
         }
         return response;
     }

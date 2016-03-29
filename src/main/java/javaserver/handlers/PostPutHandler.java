@@ -1,16 +1,25 @@
-package javaserver;
+package javaserver.handlers;
+
+import javaserver.Request;
 
 import java.nio.file.Files;
 import java.io.IOException;
 
-public class PostPutHandler extends Handler {
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+public class PostPutHandler implements Handler {
+
+
+    static final Path path = Paths.get("./test");
 
     public Response handleRequest(Request request) {
+        Response response = new Response();
         try {
             writeData(request.getBody());
+            response.setStatus(Status.Ok);
         } catch (IOException e) {
-            response = new ResponseBuilder().buildResponse(Status.NotFound);
+            response.setStatus(Status.ServerError);
         }
         return response;
     }

@@ -1,4 +1,4 @@
-package javaserver;
+package javaserver.handlers;
 
 import java.net.URLDecoder;
 import java.io.UnsupportedEncodingException;
@@ -25,7 +25,7 @@ public class ParameterDecoder {
         }
     }
 
-    public String decodeURI(String input) {
+    public String decodeUri(String input) {
         String params = getParametersString(input);
 
         params = params.replace("=", " = ");

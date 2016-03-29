@@ -1,4 +1,7 @@
-package javaserver;
+package javaserver.handlers;
+
+import javaserver.Request;
+
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -22,7 +25,7 @@ public class DeleteHandlerTest {
     public void deleteHandlerReturnsNotFoundResponseWhenDeleteFileFails() {
         response = new DeleteHandlerDeleteFailsMock().handleRequest(request);
 
-        assertEquals(Status.NotFound, response.getStatus());
+        assertEquals(Status.ServerError, response.getStatus());
     }
 
     private class DeleteHandlerDeleteWorksMock extends DeleteHandler {

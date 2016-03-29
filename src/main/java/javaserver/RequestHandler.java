@@ -1,54 +1,55 @@
 package javaserver;
 
-import java.util.List;
-import java.util.Arrays;
+import java.io.File;
+
+import javaserver.handlers.DirectoryHandler;
+import javaserver.handlers.FileHandler;
+import javaserver.handlers.Handler;
+import javaserver.handlers.MethodNotAllowedHandler;
+import javaserver.handlers.NotFoundHandler;
+import javaserver.handlers.Response;
 
 public class RequestHandler {
 
     private Request request;
     private Response response;
-    private Router router = new Router(new CobSpecRoutes());
-    private String method;
-    private ParameterDecoder decoder = new ParameterDecoder();
+    private Router router;
 
     public Response handleRequest(Request request) {
         Handler handler = determineHandler(request);
+        return handler.handleRequest(request);
+    }
 
-        Response response = handler.handleRequest(request);
-
-        String uri = request.getUri();
-        if (decoder.hasParameters(uri)) {
-            String body = decoder.decodeURI(uri);
-            response.setBody(body);
-        }
-
-        if (router.isRedirect(uri)) {
-            response = new ResponseBuilder().buildResponse(Status.Redirect);
-            String headers = router.getRedirectHeader(uri);
-            response.setHeaders(headers);
-        }
-        return response;
+    public RequestHandler(Router router) {
+        this.router = router;
     }
 
     public Handler determineHandler(Request request) {
+        String uri = removeParameters(request.getUri());
         String method = request.getMethod();
-        String uri = request.getUri();
-        if (router.uriIsAllowed(method, uri)) {
-            switch (method) {
-              case "GET":
-              case "HEAD":
-                  return new GetHandler();
-              case "POST":
-              case "PUT" :
-                  return new PostPutHandler();
-              case "DELETE":
-                  return new DeleteHandler();
-              case "OPTIONS":
-                  return new OptionsHandler(router);
-              default:
-                  return new ErrorHandler(Status.NotFound);
+
+        if (router.hasRoute(uri)) {
+            Handler handler = router.getHandler(uri, method);
+            if (handler != null) {
+                return handler;
+            } else {
+                return new MethodNotAllowedHandler();
             }
         }
-        return new ErrorHandler(Status.NotFound);
+
+        String fileUri = router.getRootPath() + uri;
+        File file = getFile(fileUri);
+
+        if (file.isFile()) return new FileHandler();
+        if (file.isDirectory()) return new DirectoryHandler(fileUri);
+        return new NotFoundHandler();
+    }
+
+    private String removeParameters(String uri) {
+        return uri.split("\\?")[0];
+    }
+
+    public File getFile(String path) {
+        return new File(path);
     }
 }

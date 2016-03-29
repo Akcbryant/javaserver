@@ -1,53 +1,58 @@
 package javaserver;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+
+import javaserver.handlers.Handler;
 
 public class Router {
 
-    private HashMap<String, String[]> routes;
-    private HashMap<String, String> redirects;
+    private String rootPath;
+    private List<Route> routes = new ArrayList<Route>();
 
-    Router(Routes routes) {
-        this.routes = routes.routes;
-        this.redirects = routes.redirects;
+    public Router(String rootPath) {
+        this.rootPath = rootPath;
     }
 
-    public boolean uriIsAllowed(String method, String uri) {
-        String[] availableRoutes = routes.get(method);
-        uri = uri.split("\\?")[0];
+    public String getRootPath() {
+        return rootPath;
+    }
 
-        if (availableRoutes != null) {
-            List routesList = Arrays.asList(availableRoutes);
-            return routesList.contains(uri);
-        } else {
-            return false;
+    public void addRoute(Route route) {
+        routes.add(route);
+    }
+
+    public boolean hasRoute(String uri) {
+        for (Route route : routes) {
+            if (route.uri.equals(uri)) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    public Handler getHandler(String uri, String method) {
+        for (Route route : routes) {
+            if (route.uri.equals(uri) && route.method.equals(method)) {
+                return route.handler;
+            }
+        }
+        return null;
     }
 
     public String availableMethods(String uri) {
         String availableMethods = "";
 
-        for (Map.Entry<String, String[]> entry : routes.entrySet()) {
-            if (Arrays.asList(entry.getValue()).contains(uri)) {
-                availableMethods += entry.getKey() + ",";
+        for (Route route : routes) {
+            if (route.uri.equals(uri)) {
+                availableMethods += route.method + ",";
             }
         }
 
-        return stripLastLetter(availableMethods);
-    }
+        availableMethods += "OPTIONS";
 
-    public boolean isRedirect(String uri) {
-        return redirects.containsKey(uri);
-    }
-
-    public String getRedirectHeader(String uri) {
-        if (isRedirect(uri)) {
-            return "Location: " + redirects.get(uri);
-        }
-        return "";
+        return availableMethods;
     }
 
     private String stripLastLetter(String string) {

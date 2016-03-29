@@ -1,4 +1,6 @@
-package javaserver;
+package javaserver.handlers;
+
+import javaserver.Request;
 
 import static org.junit.Assert.assertEquals;
 

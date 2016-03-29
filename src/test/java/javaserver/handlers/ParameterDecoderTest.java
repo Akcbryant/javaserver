@@ -1,8 +1,9 @@
-package javaserver;
+package javaserver.handlers;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class ParameterDecoderTest {
@@ -47,13 +48,13 @@ public class ParameterDecoderTest {
     }
 
     @Test
-    public void decodeURIWithNoParamsReturnsEmptyString() {
-        assertEquals("", decoder.decodeURI(noParams));
+    public void decodeUriWithNoParamsReturnsEmptyString() {
+        assertEquals("", decoder.decodeUri(noParams));
     }
 
     @Test
-    public void decodeURIWithEncodedParamReturnsDecodedString() {
-        assertEquals(returnBody, decoder.decodeURI(multipleEncodedParams));
+    public void decodeUriWithEncodedParamReturnsDecodedString() {
+        assertEquals(returnBody, decoder.decodeUri(multipleEncodedParams));
     }
 
 }

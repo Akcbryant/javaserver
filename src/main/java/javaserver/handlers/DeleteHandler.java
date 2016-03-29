@@ -1,16 +1,23 @@
-package javaserver;
+package javaserver.handlers;
 
+import javaserver.Request;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.IOException;
+import java.nio.file.Paths;
 
-public class DeleteHandler extends Handler {
+public class DeleteHandler implements Handler {
+
+    static final Path path = Paths.get("./test");
 
     public Response handleRequest(Request request) {
+        Response response = new Response();
         try {
             deleteFile(path);
+            response.setStatus(Status.Ok);
         } catch (IOException e) {
-            response = new ResponseBuilder().buildResponse(Status.NotFound);
+            response.setStatus(Status.ServerError);
         }
         return response;
     }
