@@ -9,8 +9,8 @@ import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
 
 public class App {
-    //To use passed in directory when cob_spec works System.getProperty("user.dir")
-    private static String directory = "/Users/GraveyTraine/desktop/Java/cob_spec/public";
+
+    private static String directory = System.getProperty("user.dir");
     private static int port = 5000;
 
     public int getPort() {
@@ -22,13 +22,13 @@ public class App {
     }
 
     public static void main(String[] args) {
+        getArgs(args);
         Router cobSpecRouter = makeCobSpecRouter(directory);
         Server server = new Server(port, cobSpecRouter);
-        System.out.println(directory);
         server.turnOn();
     }
 
-    public void getArgs(String[] args) {
+    public static void getArgs(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-p")) port = Integer.parseInt(args[i + 1]);
             else if (args[i].equals("-d")) directory = args[i + 1];
@@ -48,7 +48,6 @@ public class App {
         router.addRoute(new Route("/method_options", "PUT", new PostPutHandler()));
         router.addRoute(new Route("/method_options", "OPTIONS", new OptionsHandler(router.availableMethods("/method_options"))));
         router.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
-        router.addRoute(new Route("/file1", "GET", new GetHandler()));
         return router;
     }
 }

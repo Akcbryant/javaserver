@@ -53,7 +53,7 @@ public class Response {
     }
 
     public String toString() {
-        return version + " " + status + "\r\n" + headers + "\r\n" + body + "\r\n";
+        return version + " " + status + "\r\n" + headers + "\r\n" + body;
     }
 
 }

@@ -19,11 +19,6 @@ public class Server {
         this.router = router;
     }
 
-    Server(int port, ServerSocket serverSocket) {
-        this.port = port;
-        this.serverSocket = serverSocket;
-    }
-
     public void turnOn() {
         try {
             listenOnPort();
@@ -37,20 +32,9 @@ public class Server {
         }
     }
 
-    private void listenOnPort() throws IOException {
+    protected void listenOnPort() throws IOException {
         serverSocket = new ServerSocket(port);
         serverIsOn = true;
-    }
-
-
-    public void turnOff() {
-        try {
-            clientSocket.close();
-            serverSocket.close();
-            serverIsOn = false;
-        } catch (IOException e) {
-            System.out.println("Exception caught when trying to close the Server" + e.toString());
-        }
     }
 
     public ServerSocket getServerSocket() {

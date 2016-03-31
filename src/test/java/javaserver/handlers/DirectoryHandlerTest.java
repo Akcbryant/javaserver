@@ -17,6 +17,14 @@ public class DirectoryHandlerTest {
         assertEquals("", response.getBody());
     }
 
+    @Test
+    public void createDirectoryListBody_GivenANonEmptyDirectory_ReturnsHTMLListing() {
+        response = new MockWithNonEmptyDirectory().handleRequest(request);
+
+        String expected = String.format(DirectoryHandler.HTMLFORMAT, "/test", "test");
+        assertEquals(expected + expected + expected, response.getBody());
+    }
+
     private class MockWithEmptyDirectory extends DirectoryHandler {
 
         public MockWithEmptyDirectory() {
@@ -26,6 +34,18 @@ public class DirectoryHandlerTest {
         @Override
         public String[] getFilesList(String directoryPath) {
             return null;
+        }
+    }
+
+    private class MockWithNonEmptyDirectory extends DirectoryHandler {
+
+        public MockWithNonEmptyDirectory() {
+            super("");
+        }
+
+        @Override
+        public String[] getFilesList(String directoryPath) {
+            return new String[] {"test", "test", "test"};
         }
     }
 }

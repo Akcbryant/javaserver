@@ -5,6 +5,7 @@ import javaserver.handlers.DirectoryHandler;
 import javaserver.handlers.GetHandler;
 import javaserver.handlers.Handler;
 import javaserver.handlers.HeadHandler;
+import javaserver.handlers.MethodNotAllowedHandler;
 import javaserver.handlers.OptionsHandler;
 import javaserver.handlers.ParametersHandler;
 import javaserver.handlers.PostPutHandler;
@@ -102,5 +103,12 @@ public class RequestHandlerTest {
         handler = determineHandler("GET", "/redirect");
 
         assertEquals(new RedirectHandler("").getClass(), handler.getClass());
+    }
+
+    @Test
+    public void determineHandler_GivenNotAllowedMethod_ReturnsMethodNotAllowedHandler() {
+        handler = determineHandler("GET", "/method_options");
+
+        assertEquals(new MethodNotAllowedHandler().getClass(), handler.getClass());
     }
 }

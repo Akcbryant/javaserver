@@ -14,14 +14,14 @@ public class AppTest {
         app.getArgs(args);
     }
 
-    //@Test
-    //public void getArgs_GivenNoArgs_DirectoryAndPortAreDefaults() {
-        //args = new String[0];
-        //testAppWithArgs(args);
+    @Test
+    public void getArgs_GivenNoArgs_DirectoryAndPortAreDefaults() {
+        args = new String[0];
+        testAppWithArgs(args);
 
-        //assertEquals(5000, app.getPort());
-        //assertEquals(System.getProperty("user.dir") + "/public/", app.getDirectory());
-    //}
+        assertEquals(5000, app.getPort());
+        assertEquals(System.getProperty("user.dir"), app.getDirectory());
+    }
 
     @Test
     public void getArgs_GivenBothArgs_SetsDirectoryAndPort() {

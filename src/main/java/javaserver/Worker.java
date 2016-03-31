@@ -18,18 +18,25 @@ public class Worker implements Runnable {
 
     public void run() {
         try {
-            Request request = new RequestParser().parseRequest(clientSocket.getInputStream());
+            Request request = getRequest(clientSocket.getInputStream());
             Response response = handleRequest(request);
-            System.out.println(response.toString());
-            clientSocket.getOutputStream().write(response.toString().getBytes("UTF-8"));
-            clientSocket.close();
+            writeResponse(response);
         } catch (IOException e) {
 
         }
     }
 
+    private void writeResponse(Response response) throws IOException {
+        clientSocket.getOutputStream().write(response.toString().getBytes("UTF-8"));
+        clientSocket.close();
+    }
+
     private Response handleRequest(Request request) {
         Response response = new RequestHandler(router).handleRequest(request);
         return response;
+    }
+
+    private Request getRequest(InputStream inputStream) {
+        return new RequestParser().parseRequest(inputStream);
     }
 }

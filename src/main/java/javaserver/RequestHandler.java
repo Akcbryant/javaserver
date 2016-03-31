@@ -40,7 +40,7 @@ public class RequestHandler {
         String fileUri = router.getRootPath() + uri;
         File file = getFile(fileUri);
 
-        if (file.isFile()) return new FileHandler();
+        if (file.isFile()) return new FileHandler(fileUri);
         if (file.isDirectory()) return new DirectoryHandler(fileUri);
         return new NotFoundHandler();
     }
