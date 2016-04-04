@@ -8,20 +8,28 @@ import java.net.Socket;
 
 public class Server {
 
-    int port;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private boolean serverIsOn = false;
     private Router router;
 
-    Server(int port, Router router) {
-        this.port = port;
+    Server(Router router, int port) {
+        try {
+            this.serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+        this.router = router;
+    }
+
+    Server(Router router, ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
         this.router = router;
     }
 
     public void turnOn() {
         try {
-            listenOnPort();
+            serverIsOn = true;
             while (serverIsOn) {
                 clientSocket = serverSocket.accept();
                 Runnable worker = new Worker(clientSocket, router);
@@ -32,16 +40,15 @@ public class Server {
         }
     }
 
-    protected void listenOnPort() throws IOException {
-        serverSocket = new ServerSocket(port);
-        serverIsOn = true;
-    }
-
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
 
     public boolean isOn() {
         return serverIsOn;
+    }
+
+    public void turnOff() {
+        serverIsOn = false;
     }
 }

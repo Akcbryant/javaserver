@@ -15,31 +15,34 @@ public class PostPutHandlerTest {
 
     @Test
     public void successfulWriteToFileReturnsAnOkResponse() {
-        response = new PostPutHandlerWriteDataSucceeds().handleRequest(request);
+        response = new MockPostPutHandler(true).handleRequest(request);
 
         assertEquals(Status.Ok, response.getStatus());
     }
 
     @Test
     public void failureToWriteToFileReturnsAFailedResponse() {
-        response = new PostPutHandlerWriteDataFailed().handleRequest(request);
+        response = new MockPostPutHandler(false).handleRequest(request);
 
         assertEquals(Status.ServerError, response.getStatus());
     }
 
-    private class PostPutHandlerWriteDataFailed extends PostPutHandler {
+    private class MockPostPutHandler extends PostPutHandler {
+
+        boolean writeDataIsSuccessful;
+
+        MockPostPutHandler(boolean writeDataIsSuccessful) {
+            super("");
+            this.writeDataIsSuccessful = writeDataIsSuccessful;
+        }
 
         @Override
         public void writeData(String dataString) throws IOException {
-            throw new IOException();
-        }
-    }
+            if (writeDataIsSuccessful) {
 
-    private class PostPutHandlerWriteDataSucceeds extends PostPutHandler {
-
-        @Override
-        public void writeData(String dataString) {
-
+            } else {
+                throw new IOException();
+            }
         }
     }
 }

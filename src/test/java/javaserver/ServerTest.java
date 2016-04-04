@@ -12,20 +12,33 @@ import java.net.ServerSocket;
 
 public class ServerTest {
 
-    private static final int testPort = 5000;
-    private static final Router testRouter = new Router("./");
-
-    Server testServer = new Server(testPort, testRouter);
-
     @Test
-    public void testPortIsSet() {
-        assertEquals(testServer.port, testPort);
+    public void acceptsRequestWhileServerIsOn() throws IOException {
+        MockServerSocket serverSocket = new MockServerSocket();
+        Server testServer = new Server(new Router(""), serverSocket);
+        serverSocket.setServer(testServer);
+
+        testServer.turnOn();
+
+        assertEquals(1, serverSocket.acceptCalled);
     }
 
-    @Test
-    public void listenOnPort_TurnsServerOn() throws IOException {
-        testServer.listenOnPort();
+    private class MockServerSocket extends ServerSocket {
 
-        assertTrue(testServer.isOn());
+        private Server testServer;
+        public int acceptCalled = 0;
+
+        MockServerSocket() throws IOException {}
+
+        @Override
+        public Socket accept() {
+            testServer.turnOff();
+            acceptCalled++;
+            return new Socket();
+        }
+
+        public void setServer(Server server) {
+            this.testServer = server;
+        }
     }
 }

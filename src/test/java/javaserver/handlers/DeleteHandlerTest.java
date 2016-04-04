@@ -16,31 +16,34 @@ public class DeleteHandlerTest {
 
     @Test
     public void deleteHandlerReturnsOKResponseWhenDeleteFileWorks() {
-        response = new DeleteHandlerDeleteWorksMock().handleRequest(request);
+        response = new MockDeleteHandler(true).handleRequest(request);
 
         assertEquals(Status.Ok, response.getStatus());
     }
 
     @Test
     public void deleteHandlerReturnsNotFoundResponseWhenDeleteFileFails() {
-        response = new DeleteHandlerDeleteFailsMock().handleRequest(request);
+        response = new MockDeleteHandler(false).handleRequest(request);
 
         assertEquals(Status.ServerError, response.getStatus());
     }
 
-    private class DeleteHandlerDeleteWorksMock extends DeleteHandler {
+    private class MockDeleteHandler extends DeleteHandler {
 
-        @Override
-        public void deleteFile(Path path) {
+        private boolean deleteIsSuccessful;
 
+        MockDeleteHandler(boolean deleteIsSuccessful) {
+            super("");
+            this.deleteIsSuccessful = deleteIsSuccessful;
         }
-    }
-
-    private class DeleteHandlerDeleteFailsMock extends DeleteHandler {
 
         @Override
-        public void deleteFile(Path path) throws IOException {
-            throw new IOException();
+        public void deleteFile() throws IOException {
+            if (deleteIsSuccessful) {
+
+            } else {
+                throw new IOException();
+            }
         }
     }
 }

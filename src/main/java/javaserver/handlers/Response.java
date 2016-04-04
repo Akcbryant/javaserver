@@ -1,5 +1,7 @@
 package javaserver.handlers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class Response {
@@ -8,6 +10,7 @@ public class Response {
     private Status status = Status.Empty;
     private String headers = "";
     private String body = "";
+    private byte[] byteBody = new byte[0];
 
     Response() {
 
@@ -36,6 +39,10 @@ public class Response {
         return body;
     }
 
+    public byte[] getByteBody() {
+        return byteBody;
+    }
+
     public void setVersion(String version) {
         this.version = version;
     }
@@ -52,8 +59,22 @@ public class Response {
         this.body = body;
     }
 
+    public void setBody(byte[] byteBody) {
+        this.byteBody = byteBody;
+    }
+
     public String toString() {
         return version + " " + status + "\r\n" + headers + "\r\n" + body;
     }
 
+    public byte[] getBytes() {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        try {
+            byteStream.write(toString().getBytes());
+            byteStream.write(byteBody);
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+        return byteStream.toByteArray();
+    }
 }

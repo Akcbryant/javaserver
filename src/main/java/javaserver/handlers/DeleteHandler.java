@@ -3,18 +3,22 @@ package javaserver.handlers;
 import javaserver.Request;
 
 import java.io.IOException;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class DeleteHandler implements Handler {
 
-    static final Path path = Paths.get("./test");
+    String fileUri;
+
+    public DeleteHandler(String fileUri) {
+        this.fileUri = fileUri;
+    }
 
     public Response handleRequest(Request request) {
         Response response = new Response();
         try {
-            deleteFile(path);
+            deleteFile();
             response.setStatus(Status.Ok);
         } catch (IOException e) {
             response.setStatus(Status.ServerError);
@@ -22,7 +26,8 @@ public class DeleteHandler implements Handler {
         return response;
     }
 
-    public void deleteFile(Path path) throws IOException {
-        Files.delete(path);
+    public void deleteFile() throws IOException {
+        File file = new File(fileUri);
+        Files.delete(file.toPath());
     }
 }

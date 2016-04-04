@@ -22,12 +22,12 @@ public class Worker implements Runnable {
             Response response = handleRequest(request);
             writeResponse(response);
         } catch (IOException e) {
-
+            System.out.println(e.toString());
         }
     }
 
     private void writeResponse(Response response) throws IOException {
-        clientSocket.getOutputStream().write(response.toString().getBytes("UTF-8"));
+        clientSocket.getOutputStream().write(response.getBytes());
         clientSocket.close();
     }
 
@@ -36,7 +36,7 @@ public class Worker implements Runnable {
         return response;
     }
 
-    private Request getRequest(InputStream inputStream) {
+    protected Request getRequest(InputStream inputStream) {
         return new RequestParser().parseRequest(inputStream);
     }
 }

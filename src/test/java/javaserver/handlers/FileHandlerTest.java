@@ -3,6 +3,7 @@ package javaserver.handlers;
 import javaserver.Request;
 
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class FileHandlerTest {
 
@@ -10,8 +11,12 @@ public class FileHandlerTest {
 
     Request request = new Request();
     Response response;
+    String contentRange;
+    int contentLength = "test".getBytes().length;
+    byte[] content = "test".getBytes();
 
-    public void fileHandler_GivenAnythingButAGetRequest_ReturnsMethodNotAllowed() {
+    @Test
+    public void methodThatIsAnthingButGETSetsStatusToMethodNotAllowed() {
         request.setMethod("POST");
 
         response = new FileHandler("").handleRequest(request);
@@ -19,40 +24,96 @@ public class FileHandlerTest {
         assertEquals(Status.MethodNotAllowed, response.getStatus());
     }
 
-    public void fileHandler_SuccessfulFileRead_HasContentsInBody() {
+    @Test
+    public void setResponseBodyToSuccessfullyReadFileContents() {
         request.setMethod("GET");
-        response = new MockFileHandlerContentsSuccessful().handleRequest(request);
+        response = new MockFileHandler(true).handleRequest(request);
 
-        assertEquals(SUCCESSMESSAGE, response.getBody());
+        assertEquals(SUCCESSMESSAGE, new String(response.getByteBody()));
     }
 
-    public void fileHandler_UnsuccessfulFileRead_HasEmptyBody() {
-        response = new MockFileHandlerContentsUnsuccessful().handleRequest(request);
+    @Test
+    public void setResponseBodyToEmptyUponFailureToReadFileContents() {
+        response = new MockFileHandler(false).handleRequest(request);
 
         assertEquals("", response.getBody());
     }
 
-    private class MockFileHandlerContentsSuccessful extends FileHandler {
+    @Test
+    public void getBeginningOfContentRangeReturnsFirstNumberInRange() {
+        contentRange = "bytes=8-9";
 
-        MockFileHandlerContentsSuccessful() {
-            super("");
-        }
-
-        @Override
-        public String getFileContents(String fileUri) {
-            return SUCCESSMESSAGE;
-        }
+        int firstNumberInRange = new FileHandler("").getFirstNumberInRange(contentRange, contentLength);
+        assertEquals(8, firstNumberInRange);
     }
 
-    private class MockFileHandlerContentsUnsuccessful extends FileHandler {
+    @Test
+    public void returnsContentLengthMinusNumberWhenFirstNumberIsAbsent() {
+        contentRange = "bytes=-9";
 
-        MockFileHandlerContentsUnsuccessful() {
+        int firstNumberInRange = new FileHandler("").getFirstNumberInRange(contentRange, contentLength);
+
+        assertEquals(0, firstNumberInRange);
+    }
+
+    @Test
+    public void getFirstNumberReturnsNumberWhenLastNumberIsEmpty() {
+        contentRange = "bytes=9-";
+
+        int firstNumberInRange = new FileHandler("").getFirstNumberInRange(contentRange, contentLength);
+
+        assertEquals(9, firstNumberInRange);
+    }
+
+    @Test
+    public void getEndingNumberReturnsSecondNumberInRange() {
+        contentRange = "bytes=8-9";
+
+        int lastNumberInRange = new FileHandler("").getLastNumberInRange(contentRange, contentLength);
+
+        assertEquals(10, lastNumberInRange);
+    }
+
+    @Test
+    public void returnsLengthOfContentsIfSecondNumberIsNotThere() {
+        contentRange = "bytes=9-";
+
+        int lastNumberInRange = new FileHandler("").getLastNumberInRange(contentRange, contentLength);
+
+        assertEquals(contentLength, lastNumberInRange);
+    }
+
+    @Test
+    public void returnsNumberIfFirstNumberIsMissing() {
+        contentRange = "bytes=-9";
+
+        int lastNumberInRange = new FileHandler("").getLastNumberInRange(contentRange, contentLength);
+
+        assertEquals(contentLength, lastNumberInRange);
+    }
+
+    @Test
+    public void getRangeOfBytesReturnsAppropriateRangeOfBytes() {
+        byte[] byteRange = new FileHandler("").getRangeOfBytes(content, 0, 4);
+
+        assertEquals("test", new String(byteRange));
+    }
+
+    private class MockFileHandler extends FileHandler {
+
+        private boolean fileReadSuccessful;
+
+        MockFileHandler(boolean fileReadSuccessful) {
             super("");
+            this.fileReadSuccessful = fileReadSuccessful;
         }
 
         @Override
-        public String getFileContents(String fileUri) {
-            return "";
+        public byte[] getFileContents(String fileUri) {
+            if (fileReadSuccessful) {
+                return SUCCESSMESSAGE.getBytes();
+            }
+            return "".getBytes();
         }
     }
 }

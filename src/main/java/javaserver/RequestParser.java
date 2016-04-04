@@ -56,7 +56,7 @@ public class RequestParser {
             HashMap<String, String> headers = new HashMap<String, String>();
 
             while (scanner.hasNext()) {
-                String[] nextString = scanner.next().split(":");
+                String[] nextString = scanner.next().split(": ");
                 if (nextString.length > 1) {
                     headers.put(nextString[0], nextString[1]);
                 }

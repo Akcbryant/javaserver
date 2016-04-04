@@ -1,10 +1,11 @@
 package javaserver;
 
 import javaserver.handlers.DeleteHandler;
-import javaserver.handlers.GetHandler;
+import javaserver.handlers.FileHandler;
 import javaserver.handlers.HeadHandler;
 import javaserver.handlers.OptionsHandler;
 import javaserver.handlers.ParametersHandler;
+import javaserver.handlers.PatchHandler;
 import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
 
@@ -24,7 +25,7 @@ public class App {
     public static void main(String[] args) {
         getArgs(args);
         Router cobSpecRouter = makeCobSpecRouter(directory);
-        Server server = new Server(port, cobSpecRouter);
+        Server server = new Server(cobSpecRouter, port);
         server.turnOn();
     }
 
@@ -37,17 +38,19 @@ public class App {
 
     public static Router makeCobSpecRouter(String directory) {
         Router router = new Router(directory);
-        router.addRoute(new Route("/form", "GET", new GetHandler()));
-        router.addRoute(new Route("/form", "POST", new PostPutHandler()));
-        router.addRoute(new Route("/form", "PUT", new PostPutHandler()));
-        router.addRoute(new Route("/form", "DELETE", new DeleteHandler()));
+        router.addRoute(new Route("/form", "GET", new FileHandler(directory + "/form")));
+        router.addRoute(new Route("/form", "POST", new PostPutHandler(directory + "/form")));
+        router.addRoute(new Route("/form", "PUT", new PostPutHandler(directory + "/form")));
+        router.addRoute(new Route("/form", "DELETE", new DeleteHandler(directory + "/form")));
         router.addRoute(new Route("/redirect", "GET", new RedirectHandler("http://localhost:5000/")));
-        router.addRoute(new Route("/method_options", "GET", new GetHandler()));
+        router.addRoute(new Route("/method_options", "GET", new FileHandler(directory + "/method_options")));
         router.addRoute(new Route("/method_options", "HEAD", new HeadHandler()));
-        router.addRoute(new Route("/method_options", "POST", new PostPutHandler()));
-        router.addRoute(new Route("/method_options", "PUT", new PostPutHandler()));
+        router.addRoute(new Route("/method_options", "POST", new PostPutHandler(directory + "/method_options")));
+        router.addRoute(new Route("/method_options", "PUT", new PostPutHandler(directory + "/method_options")));
         router.addRoute(new Route("/method_options", "OPTIONS", new OptionsHandler(router.availableMethods("/method_options"))));
         router.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
+        router.addRoute(new Route("/patch-content.txt", "GET", new FileHandler(directory + "/patch-content.txt")));
+        router.addRoute(new Route("/patch-content.txt", "PATCH", new PatchHandler(directory + "/patch-content.txt")));
         return router;
     }
 }
