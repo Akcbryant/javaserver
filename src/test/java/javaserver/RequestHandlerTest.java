@@ -11,6 +11,7 @@ import javaserver.handlers.ParametersHandler;
 import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
 import javaserver.handlers.Response;
+import javaserver.handlers.UnauthorizedHandler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 
 public class RequestHandlerTest {
 
+    private Authenticator authenticator;
     private Router router;
     private RequestHandler requestHandler;
     private Response response;
@@ -44,7 +46,12 @@ public class RequestHandlerTest {
         testRouter.addRoute(new Route("/method_options", "OPTIONS", new OptionsHandler("")));
         testRouter.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
         testRouter.addRoute(new Route("/redirect", "GET", new RedirectHandler("")));
-        requestHandler = new RequestHandler(testRouter);
+        testRouter.addRoute(new Route("/logs", "GET", new FileHandler("")));
+
+        authenticator = new Authenticator();
+        authenticator.addToProtectedRoutes(new Route("/logs", "GET"));
+
+        requestHandler = new RequestHandler(testRouter, authenticator);
     }
 
     @Test
@@ -110,5 +117,29 @@ public class RequestHandlerTest {
         handler = determineHandler("GET", "/method_options");
 
         assertEquals(new MethodNotAllowedHandler().getClass(), handler.getClass());
+    }
+
+    @Test
+    public void protectedRouteReturnsUnavailableHandlerIfRequestIsUnauthorized() {
+        handler = determineHandler("GET", "/logs");
+
+        assertEquals(new UnauthorizedHandler("").getClass(), handler.getClass());
+    }
+
+    @Test
+    public void protectedRouteReturnsItsGivenHandlerIfRequestIsAuthorized() {
+        authenticator.addAuthenticatedUser("username:password");
+
+        request = new Request();
+        request.setMethod("GET");
+        request.setUri("/logs");
+
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=");
+        request.setHeaders(headers);
+
+        handler = requestHandler.determineHandler(request);
+
+        assertEquals(new FileHandler("").getClass(), handler.getClass());
     }
 }

@@ -1,6 +1,7 @@
 package javaserver;
 
 import javaserver.handlers.Handler;
+import javaserver.handlers.FileHandler;
 
 public class Route {
 
@@ -12,5 +13,15 @@ public class Route {
         this.uri = uri;
         this.method = method;
         this.handler = handler;
+    }
+
+    Route(String uri, String method) {
+        this.uri = uri;
+        this.method = method;
+        this.handler = new FileHandler("");
+    }
+
+    public String toString() {
+        return uri + " " + method;
     }
 }

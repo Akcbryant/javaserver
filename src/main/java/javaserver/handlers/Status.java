@@ -7,6 +7,7 @@ public enum Status {
     NoContent("204 No Content"),
     PartialContent("206 Partial Content"),
     Redirect("302 Redirect"),
+    Unauthorized("401 Unauthorized"),
     NotFound("404 Not Found"),
     MethodNotAllowed("405 Method Not Allowed"),
     ServerError("500 Internal Server Error");

@@ -63,6 +63,10 @@ public class Request {
         this.body = body;
     }
 
+    public String getFirstLine() {
+        return method + " " + uri + " " + version + "\r\n";
+    }
+
     public String toString() {
         return method + " " + uri + " " + version + "\r\n" + headers.toString() + "\r\n" + body + "\r\n";
     }

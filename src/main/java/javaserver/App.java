@@ -24,8 +24,11 @@ public class App {
 
     public static void main(String[] args) {
         getArgs(args);
+
         Router cobSpecRouter = makeCobSpecRouter(directory);
-        Server server = new Server(cobSpecRouter, port);
+        Authenticator cobSpecAuth = makeCobSpecAuthenticator();
+
+        Server server = new Server(cobSpecRouter, cobSpecAuth, port);
         server.turnOn();
     }
 
@@ -34,6 +37,19 @@ public class App {
             if (args[i].equals("-p")) port = Integer.parseInt(args[i + 1]);
             else if (args[i].equals("-d")) directory = args[i + 1];
         }
+    }
+
+    public static Authenticator makeCobSpecAuthenticator() {
+        Authenticator authenticator = new Authenticator();
+
+        authenticator.addAuthenticatedUser("admin:hunter2");
+
+        authenticator.addToProtectedRoutes(new Route("/logs", "GET"));
+        authenticator.addToProtectedRoutes(new Route("/log", "GET"));
+        authenticator.addToProtectedRoutes(new Route("/these", "PUT"));
+        authenticator.addToProtectedRoutes(new Route("/requests", "HEAD"));
+
+        return authenticator;
     }
 
     public static Router makeCobSpecRouter(String directory) {
@@ -51,6 +67,7 @@ public class App {
         router.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
         router.addRoute(new Route("/patch-content.txt", "GET", new FileHandler(directory + "/patch-content.txt")));
         router.addRoute(new Route("/patch-content.txt", "PATCH", new PatchHandler(directory + "/patch-content.txt")));
+        router.addRoute(new Route("/logs", "GET", new FileHandler(directory + "/logs")));
         return router;
     }
 }

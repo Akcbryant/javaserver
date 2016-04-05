@@ -12,14 +12,16 @@ public class Server {
     private Socket clientSocket;
     private boolean serverIsOn = false;
     private Router router;
+    private Authenticator authenticator;
 
-    Server(Router router, int port) {
+    Server(Router router, Authenticator authenticator, int port) {
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             System.out.println(e.toString());
         }
         this.router = router;
+        this.authenticator = authenticator;
     }
 
     Server(Router router, ServerSocket serverSocket) {
@@ -32,7 +34,7 @@ public class Server {
             serverIsOn = true;
             while (serverIsOn) {
                 clientSocket = serverSocket.accept();
-                Runnable worker = new Worker(clientSocket, router);
+                Runnable worker = new Worker(clientSocket, router, authenticator);
                 new Thread(worker).start();
             }
         } catch (IOException e) {
