@@ -6,12 +6,17 @@ import java.io.IOException;
 import java.net.Socket;
 
 import javaserver.handlers.Response;
+import javaserver.handlers.Status;
 
 public class Worker implements Runnable {
 
     private Socket clientSocket;
     private Router router;
     private Authenticator authenticator;
+    private Response response;
+
+    Worker() {
+    }
 
     Worker(Socket clientSocket, Router router, Authenticator authenticator) {
         this.clientSocket = clientSocket;
@@ -22,26 +27,32 @@ public class Worker implements Runnable {
     public void run() {
         try {
             Request request = getRequest(clientSocket.getInputStream());
-            Response response = handleRequest(request);
-            System.out.println(request.toString());
-            System.out.println(response.toString());
+            response = handleRequest(request);
             writeResponse(response);
         } catch (IOException e) {
-            System.out.println(e.toString());
+            closeSocket();
         }
-    }
-
-    private void writeResponse(Response response) throws IOException {
-        clientSocket.getOutputStream().write(response.getBytes());
-        clientSocket.close();
-    }
-
-    private Response handleRequest(Request request) {
-        Response response = new RequestHandler(router, authenticator).handleRequest(request);
-        return response;
     }
 
     protected Request getRequest(InputStream inputStream) {
         return new RequestParser().parseRequest(inputStream);
+    }
+
+    protected void writeResponse(Response response) throws IOException {
+        clientSocket.getOutputStream().write(response.getBytes());
+        closeSocket();
+    }
+
+    protected Response handleRequest(Request request) {
+        Response response = new RequestHandler(router, authenticator).handleRequest(request);
+        return response;
+    }
+
+    protected void closeSocket() {
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
     }
 }
