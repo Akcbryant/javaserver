@@ -28,6 +28,7 @@ public class Worker implements Runnable {
         try {
             Request request = getRequest(clientSocket.getInputStream());
             response = handleRequest(request);
+            System.out.println(response);
             writeResponse(response);
         } catch (IOException e) {
             closeSocket();
