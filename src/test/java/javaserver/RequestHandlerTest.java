@@ -12,6 +12,7 @@ import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
 import javaserver.handlers.Response;
 import javaserver.handlers.UnauthorizedHandler;
+import javaserver.utility.FileUtility;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,17 +37,28 @@ public class RequestHandlerTest {
         return requestHandler.determineHandler(request);
     }
 
+    private static final FileUtility UTILITY = new FileUtility();
+    private static final FileHandler FILE_HANDLER = new FileHandler("", UTILITY);
+    private static final DeleteHandler DELETE_HANDLER = new DeleteHandler("", UTILITY);
+    private static final DirectoryHandler DIRECTORY_HANDLER = new DirectoryHandler("");
+    private static final PostPutHandler POST_PUT_HANDLER = new PostPutHandler("", UTILITY);
+    private static final OptionsHandler OPTIONS_HANDLER = new OptionsHandler("");
+    private static final ParametersHandler PARAMETERS_HANDLER = new ParametersHandler();
+    private static final RedirectHandler REDIRECT_HANDLER = new RedirectHandler("");
+    private static final MethodNotAllowedHandler METHOD_NOT_ALLOWED_HANDLER = new MethodNotAllowedHandler();
+    private static final UnauthorizedHandler UNAUTHORIZED_HANDLER = new UnauthorizedHandler("", UTILITY);
+
     @Before
     public void setUp() {
         Router testRouter = new Router(".");
-        testRouter.addRoute(new Route("/form", "GET", new FileHandler("")));
-        testRouter.addRoute(new Route("/form", "DELETE", new DeleteHandler("")));
-        testRouter.addRoute(new Route("/method_options", "PUT", new PostPutHandler("")));
-        testRouter.addRoute(new Route("/method_options", "POST", new PostPutHandler("")));
-        testRouter.addRoute(new Route("/method_options", "OPTIONS", new OptionsHandler("")));
-        testRouter.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
-        testRouter.addRoute(new Route("/redirect", "GET", new RedirectHandler("")));
-        testRouter.addRoute(new Route("/logs", "GET", new FileHandler("")));
+        testRouter.addRoute(new Route("/form", "GET", FILE_HANDLER));
+        testRouter.addRoute(new Route("/form", "DELETE", DELETE_HANDLER));
+        testRouter.addRoute(new Route("/method_options", "PUT", POST_PUT_HANDLER));
+        testRouter.addRoute(new Route("/method_options", "POST", POST_PUT_HANDLER));
+        testRouter.addRoute(new Route("/method_options", "OPTIONS", OPTIONS_HANDLER));
+        testRouter.addRoute(new Route("/parameters", "GET", PARAMETERS_HANDLER));
+        testRouter.addRoute(new Route("/redirect", "GET", REDIRECT_HANDLER));
+        testRouter.addRoute(new Route("/logs", "GET", FILE_HANDLER));
 
         authenticator = new Authenticator();
         authenticator.addToProtectedRoutes(new Route("/logs", "GET"));
@@ -67,63 +79,63 @@ public class RequestHandlerTest {
     public void returnDirectoryHandlerFromAGetToANonCustomRouteThatIsADirectory() {
         handler = determineHandler("GET", "/");
 
-        assertEquals(new DirectoryHandler("").getClass(), handler.getClass());
+        assertEquals(DIRECTORY_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void postToCustomRouteReturnsPostPutHandler() {
         handler = determineHandler("POST", "/method_options");
 
-        assertEquals(new PostPutHandler("").getClass(), handler.getClass());
+        assertEquals(POST_PUT_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void putToCustomDefinedRouteReturnsPostPutHandler() {
         handler = determineHandler("PUT", "/method_options");
 
-        assertEquals(new PostPutHandler("").getClass(), handler.getClass());
+        assertEquals(POST_PUT_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void deleteToCustomDefinedRouteReturnsDeleteHandler() {
         handler = determineHandler("DELETE", "/form");
 
-        assertEquals(new DeleteHandler("").getClass(), handler.getClass());
+        assertEquals(DELETE_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void optionsRequestOnlyWorksWhenCustomizedOnARoute() {
         handler = determineHandler("OPTIONS", "/method_options");
 
-        assertEquals(new OptionsHandler("").getClass(), handler.getClass());
+        assertEquals(OPTIONS_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void determineHandler_GivenParametersURI_ReturnsParametersHandler() {
         handler = determineHandler("GET", "/parameters?variable1=%20%3C%2C%20&variable2=stuff");
 
-        assertEquals(new ParametersHandler().getClass(), handler.getClass());
+        assertEquals(PARAMETERS_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void getRedirectReturnsRedirectHandler() {
         handler = determineHandler("GET", "/redirect");
 
-        assertEquals(new RedirectHandler("").getClass(), handler.getClass());
+        assertEquals(REDIRECT_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void unallowedMethodReturnsNotAllowedHandler() {
         handler = determineHandler("GET", "/method_options");
 
-        assertEquals(new MethodNotAllowedHandler().getClass(), handler.getClass());
+        assertEquals(METHOD_NOT_ALLOWED_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
     public void protectedRouteReturnsUnavailableHandlerIfRequestIsUnauthorized() {
         handler = determineHandler("GET", "/logs");
 
-        assertEquals(new UnauthorizedHandler("").getClass(), handler.getClass());
+        assertEquals(UNAUTHORIZED_HANDLER.getClass(), handler.getClass());
     }
 
     @Test
@@ -140,6 +152,6 @@ public class RequestHandlerTest {
 
         handler = requestHandler.determineHandler(request);
 
-        assertEquals(new FileHandler("").getClass(), handler.getClass());
+        assertEquals(FILE_HANDLER.getClass(), handler.getClass());
     }
 }

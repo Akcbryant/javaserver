@@ -9,6 +9,8 @@ import javaserver.handlers.MethodNotAllowedHandler;
 import javaserver.handlers.NotFoundHandler;
 import javaserver.handlers.Response;
 import javaserver.handlers.UnauthorizedHandler;
+import javaserver.utility.FileUtility;
+import javaserver.utility.ResourceUtility;
 
 public class RequestHandler {
 
@@ -16,6 +18,8 @@ public class RequestHandler {
     private Response response;
     private Router router;
     private Authenticator authenticator;
+
+    private static final FileUtility fileUtility = new FileUtility();
 
     public Response handleRequest(Request request) {
         Handler handler = determineHandler(request);
@@ -33,7 +37,7 @@ public class RequestHandler {
 
         if (authenticator.isRouteProtected(new Route(uri, method))) {
             if (!authenticator.isRequestAuthenticated(request)) {
-                return new UnauthorizedHandler(router.getRootPath());
+                return new UnauthorizedHandler(router.getRootPath(), fileUtility);
             }
         }
 
@@ -49,7 +53,7 @@ public class RequestHandler {
         String fileUri = router.getRootPath() + uri;
         File file = getFile(fileUri);
 
-        if (file.isFile()) return new FileHandler(fileUri);
+        if (file.isFile()) return new FileHandler(fileUri, fileUtility);
         if (file.isDirectory()) return new DirectoryHandler(fileUri);
         return new NotFoundHandler();
     }

@@ -1,6 +1,8 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.FileUtility;
+import javaserver.utility.ResourceUtility;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -32,12 +34,12 @@ public class PostPutHandlerTest {
         boolean writeDataIsSuccessful;
 
         MockPostPutHandler(boolean writeDataIsSuccessful) {
-            super("");
+            super("", new FileUtility());
             this.writeDataIsSuccessful = writeDataIsSuccessful;
         }
 
         @Override
-        public void writeData(String dataString) throws IOException {
+        public void writeData(String fileUri, byte[] data, ResourceUtility resourceUtility) throws IOException {
             if (writeDataIsSuccessful) {
 
             } else {

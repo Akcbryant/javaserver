@@ -1,7 +1,8 @@
 package javaserver.handlers;
 
 import javaserver.Request;
-
+import javaserver.utility.FileUtility;
+import javaserver.utility.ResourceUtility;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -33,12 +34,12 @@ public class DeleteHandlerTest {
         private boolean deleteIsSuccessful;
 
         MockDeleteHandler(boolean deleteIsSuccessful) {
-            super("");
+            super("", new FileUtility());
             this.deleteIsSuccessful = deleteIsSuccessful;
         }
 
         @Override
-        public void deleteFile() throws IOException {
+        public void deleteFile(String fileUri, ResourceUtility resourceUtility) throws IOException {
             if (deleteIsSuccessful) {
 
             } else {

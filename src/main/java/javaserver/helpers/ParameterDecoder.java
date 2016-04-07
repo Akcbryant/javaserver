@@ -1,4 +1,4 @@
-package javaserver.handlers;
+package javaserver.helpers;
 
 import java.net.URLDecoder;
 import java.io.UnsupportedEncodingException;

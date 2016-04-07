@@ -32,7 +32,6 @@ public class Authenticator {
             String encodedCredentials = auth.split(" ")[1];
             String decodedCredentials = decodeString(encodedCredentials);
 
-            System.out.println(auth + " " + encodedCredentials + " " + decodedCredentials);
             return isUserAuthenticated(decodedCredentials);
         }
 

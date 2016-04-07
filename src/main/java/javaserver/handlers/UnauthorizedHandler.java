@@ -1,45 +1,39 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.ResourceUtility;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class UnauthorizedHandler implements Handler {
 
+    private static final String LOGS_LOCATION = "/logs";
+    private static final String AUTH_HEADER = "WWW-Authenticate: Basic";
+
+    private ResourceUtility resourceUtility;
     private String fileUri;
     private Response response = new Response();
 
-    public UnauthorizedHandler(String fileUri) {
+    public UnauthorizedHandler(String fileUri, ResourceUtility resourceUtility) {
         this.fileUri = fileUri;
+        this.resourceUtility = resourceUtility;
     }
 
     public Response handleRequest(Request request) {
         response.setStatus(Status.Unauthorized);
 
-        String header = "WWW-Authenticate: Basic";
-        response.setHeaders(header);
+        response.setHeaders(AUTH_HEADER);
 
         String firstLine = request.getFirstLine();
-        logString(firstLine, fileUri);
+        logString(fileUri, firstLine, resourceUtility);
 
         return response;
     }
 
-    protected void logString(String text, String fileUri) {
-        File file = new File(fileUri + "/logs");
-
+    protected void logString(String fileUri, String text, ResourceUtility resourceUtility) {
         try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileWriter fw = new FileWriter(file, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(text);
-            bw.close();
+            String logLocation = fileUri + LOGS_LOCATION;
+            resourceUtility.updateResource(logLocation, text.getBytes());
         } catch (IOException e) {
             System.out.println(e.toString());
         }

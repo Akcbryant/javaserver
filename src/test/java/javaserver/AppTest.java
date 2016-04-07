@@ -15,7 +15,7 @@ public class AppTest {
     }
 
     @Test
-    public void getArgs_GivenNoArgs_DirectoryAndPortAreDefaults() {
+    public void getArgsUsesDefaultArgsWhenNo() {
         args = new String[0];
         testAppWithArgs(args);
 

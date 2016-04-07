@@ -1,24 +1,24 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.ResourceUtility;
 
 import java.io.IOException;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class PostPutHandler implements Handler {
 
     private String fileUri;
+    private ResourceUtility resourceUtility;
 
-    public PostPutHandler(String fileUri) {
+    public PostPutHandler(String fileUri, ResourceUtility resourceUtility) {
         this.fileUri = fileUri;
+        this.resourceUtility = resourceUtility;
     }
 
     public Response handleRequest(Request request) {
         Response response = new Response();
         try {
-            writeData(request.getBody());
+            writeData(fileUri, request.getBody().getBytes(), resourceUtility);
             response.setStatus(Status.Ok);
         } catch (IOException e) {
             response.setStatus(Status.ServerError);
@@ -26,8 +26,7 @@ public class PostPutHandler implements Handler {
         return response;
     }
 
-    public void writeData(String dataString) throws IOException {
-        File file = new File(fileUri);
-        Files.write(file.toPath(), dataString.getBytes());
+    public void writeData(String fileUri, byte[] data, ResourceUtility resourceUtility) throws IOException {
+        resourceUtility.createResource(fileUri, data);
     }
 }

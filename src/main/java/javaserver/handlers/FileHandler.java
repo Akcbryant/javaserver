@@ -1,25 +1,27 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.ResourceUtility;
 
 import java.util.Arrays;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 import java.io.IOException;
 
 public class FileHandler implements Handler {
 
-    private String fileUri;
-    private Response response = new Response();
-    private int contentSize = 0;
+    private final static List ACCEPTABLE_IMAGE_FORMATS = Arrays.asList(".jpg", ".gif", ".png");
 
-    public FileHandler(String fileUri) {
+    private int contentSize = 0;
+    protected ResourceUtility resourceUtility;
+    protected String fileUri;
+    protected Response response = new Response();
+
+    public FileHandler(String fileUri, ResourceUtility resourceUtility) {
         this.fileUri = fileUri;
+        this.resourceUtility = resourceUtility;
     }
 
     public Response handleRequest(Request request) {
-        response = new Response();
 
         String method = request.getMethod();
         if (!method.equals("GET")) {
@@ -27,41 +29,25 @@ public class FileHandler implements Handler {
             return response;
         }
 
-        byte[] body = getFileContents(fileUri);
-        if (request.getHeaders().containsKey("Range")) {
-            String range = request.getHeaders().get("Range");
-            int start = getFirstNumberInRange(range, body.length);
-            int end = getLastNumberInRange(range, body.length);
-
-            body = getRangeOfBytes(body, start, end);
-
-            String headers = "";
-            headers = "Content-Length: " + body.length + "\r\n";
-            headers += "Content-Type: txt/plain" + "\r\n";
-            response.setHeaders(headers);
-
-            response.setStatus(Status.PartialContent);
-        } else {
-            String uri = request.getUri();
-            String[] splitUri = uri.split("\\.");
-
-            if (splitUri.length > 1) {
-                String headers = "";
-                headers = "Content-Length: " + contentSize + "\r\n";
-                headers += "Content-Type: image/" + splitUri[1] + "\r\n";
-                response.setHeaders(headers);
-            }
+        if (isPartialRequest(request)) {
+            response = new PartialHandler(fileUri, resourceUtility).handleRequest(request);
+            return response;
         }
+
+        if (isImageRequest(request)) {
+            response = new ImageHandler(fileUri, resourceUtility).handleRequest(request);
+            return response;
+        }
+
+        byte[] body = getFileContents(fileUri, resourceUtility);
+        contentSize = body.length;
         response.setBody(body);
         return response;
     }
 
-    public byte[] getFileContents(String fileUri) {
-        File file = new File(fileUri);
-
+    public byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
         try {
-            byte[] content = Files.readAllBytes(file.toPath());
-            contentSize = content.length;
+            byte[] content = resourceUtility.readResource(fileUri);
             response.setStatus(Status.Ok);
             return content;
         } catch (IOException e) {
@@ -70,32 +56,15 @@ public class FileHandler implements Handler {
         }
     }
 
-    public int getFirstNumberInRange(String contentRange, int contentLength) {
-        String range = contentRange.split("=")[1];
-        String firstNumber = range.split("-")[0];
-
-        if (range.startsWith("-")) {
-            int number = Integer.parseInt(range.substring(1));
-            return  Math.max(contentLength - number, 0);
-        } else {
-            return Integer.parseInt(firstNumber);
-        }
+    protected boolean isPartialRequest(Request request) {
+        return request.getHeaders().containsKey("Range");
     }
 
-    public int getLastNumberInRange(String contentRange, int contentLength) {
-        String range = contentRange.split("=")[1];
+    protected boolean isImageRequest(Request request) {
+        String uri = request.getUri();
+        String[] splitUri = uri.split("\\.");
 
-        if (range.endsWith("-") || range.startsWith("-")) {
-            return contentLength;
-        } else {
-            int lastNumber = Integer.parseInt(range.split("-")[1]);
-            return lastNumber + 1;
-        }
+        return (splitUri.length > 1 && 
+                ACCEPTABLE_IMAGE_FORMATS.contains(splitUri[1]));
     }
-
-    public byte[] getRangeOfBytes(byte[] content, int start, int end) {
-        return Arrays.copyOfRange(content, start, end);
-    }
-
-
 }

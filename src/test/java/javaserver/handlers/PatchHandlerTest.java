@@ -1,6 +1,7 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.FileUtility;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class PatchHandlerTest {
         boolean matches;
 
         MockPatchHandler(boolean matches) {
-            super("");
+            super("", new FileUtility());
             this.matches = matches;
         }
 
