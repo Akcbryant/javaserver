@@ -10,10 +10,10 @@ import javaserver.handlers.Status;
 
 public class Worker implements Runnable {
 
-    private Socket clientSocket;
     private Router router;
     private Authenticator authenticator;
     private Response response;
+    protected Socket clientSocket;
 
     Worker() {
     }
@@ -28,8 +28,8 @@ public class Worker implements Runnable {
         try {
             Request request = getRequest(clientSocket.getInputStream());
             response = handleRequest(request);
-            System.out.println(response);
             writeResponse(response);
+            closeSocket();
         } catch (IOException e) {
             closeSocket();
         }
@@ -41,7 +41,6 @@ public class Worker implements Runnable {
 
     protected void writeResponse(Response response) throws IOException {
         clientSocket.getOutputStream().write(response.getBytes());
-        closeSocket();
     }
 
     protected Response handleRequest(Request request) {

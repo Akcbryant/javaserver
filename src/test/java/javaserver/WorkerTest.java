@@ -4,6 +4,7 @@ import javaserver.handlers.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 public class WorkerTest {
 
+    @Test
     public void runGetsHandlesAndRespondsWhenWriteSucceeds() {
         MockWorker mockWorker = new MockWorker(true);
 
@@ -19,8 +21,20 @@ public class WorkerTest {
         assertEquals(1, mockWorker.writeSuccesses);
     }
 
-    public void runClosesClientSocketWhenWriteFailes() {
+    @Test
+    public void runClosesClientSocketWhenWriteFails() {
         MockWorker mockWorker = new MockWorker(false);
+
+        mockWorker.run();
+
+        assertTrue(mockWorker.socketIsClosed);
+    }
+
+    @Test
+    public void runClosesClientSocketWhenWriteSucceeds() {
+        MockWorker mockWorker = new MockWorker(true);
+
+        mockWorker.run();
 
         assertTrue(mockWorker.socketIsClosed);
     }
@@ -33,6 +47,7 @@ public class WorkerTest {
 
         MockWorker(boolean writeResponseSucceeds) {
             this.writeResponseSucceeds = writeResponseSucceeds;
+            this.clientSocket = new MockSocket();
         }
 
         @Override
@@ -56,6 +71,14 @@ public class WorkerTest {
         @Override
         protected void closeSocket() {
             socketIsClosed = true;
+        }
+    }
+
+    private class MockSocket extends Socket {
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return null;
         }
     }
 }
