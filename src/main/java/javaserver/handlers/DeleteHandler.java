@@ -1,33 +1,34 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.ResourceUtility;
 
 import java.io.IOException;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class DeleteHandler implements Handler {
 
     String fileUri;
+    ResourceUtility resourceUtility;
 
-    public DeleteHandler(String fileUri) {
+    public DeleteHandler(String fileUri, ResourceUtility resourceUtility) {
         this.fileUri = fileUri;
+        this.resourceUtility = resourceUtility;
     }
 
     public Response handleRequest(Request request) {
         Response response = new Response();
+
         try {
-            deleteFile();
+            deleteFile(fileUri, resourceUtility);
             response.setStatus(Status.Ok);
         } catch (IOException e) {
             response.setStatus(Status.ServerError);
         }
+
         return response;
     }
 
-    public void deleteFile() throws IOException {
-        File file = new File(fileUri);
-        Files.delete(file.toPath());
+    public void deleteFile(String fileUri, ResourceUtility resourceUtility) throws IOException {
+        resourceUtility.deleteResource(fileUri);
     }
 }

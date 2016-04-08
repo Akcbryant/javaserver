@@ -2,12 +2,14 @@ package javaserver;
 
 import javaserver.handlers.DeleteHandler;
 import javaserver.handlers.FileHandler;
+import javaserver.handlers.FormHandler;
 import javaserver.handlers.HeadHandler;
 import javaserver.handlers.OptionsHandler;
 import javaserver.handlers.ParametersHandler;
 import javaserver.handlers.PatchHandler;
 import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
+import javaserver.utility.FileUtility;
 
 public class App {
 
@@ -39,7 +41,7 @@ public class App {
         }
     }
 
-    public static Authenticator makeCobSpecAuthenticator() {
+    private static Authenticator makeCobSpecAuthenticator() {
         Authenticator authenticator = new Authenticator();
 
         authenticator.addAuthenticatedUser("admin:hunter2");
@@ -52,22 +54,24 @@ public class App {
         return authenticator;
     }
 
-    public static Router makeCobSpecRouter(String directory) {
+    private static Router makeCobSpecRouter(String directory) {
         Router router = new Router(directory);
-        router.addRoute(new Route("/form", "GET", new FileHandler(directory + "/form")));
-        router.addRoute(new Route("/form", "POST", new PostPutHandler(directory + "/form")));
-        router.addRoute(new Route("/form", "PUT", new PostPutHandler(directory + "/form")));
-        router.addRoute(new Route("/form", "DELETE", new DeleteHandler(directory + "/form")));
+        FileUtility fileUtility = new FileUtility();
+
+        router.addRoute(new Route("/form", "GET", new FormHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("/form", "POST", new PostPutHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("/form", "PUT", new PostPutHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("/form", "DELETE", new DeleteHandler(directory + "/form", fileUtility)));
         router.addRoute(new Route("/redirect", "GET", new RedirectHandler("http://localhost:5000/")));
-        router.addRoute(new Route("/method_options", "GET", new FileHandler(directory + "/method_options")));
+        router.addRoute(new Route("/method_options", "GET", new FileHandler(directory + "/method_options", fileUtility)));
         router.addRoute(new Route("/method_options", "HEAD", new HeadHandler()));
-        router.addRoute(new Route("/method_options", "POST", new PostPutHandler(directory + "/method_options")));
-        router.addRoute(new Route("/method_options", "PUT", new PostPutHandler(directory + "/method_options")));
+        router.addRoute(new Route("/method_options", "POST", new PostPutHandler(directory + "/method_options", fileUtility)));
+        router.addRoute(new Route("/method_options", "PUT", new PostPutHandler(directory + "/method_options", fileUtility)));
         router.addRoute(new Route("/method_options", "OPTIONS", new OptionsHandler(router.availableMethods("/method_options"))));
         router.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
-        router.addRoute(new Route("/patch-content.txt", "GET", new FileHandler(directory + "/patch-content.txt")));
-        router.addRoute(new Route("/patch-content.txt", "PATCH", new PatchHandler(directory + "/patch-content.txt")));
-        router.addRoute(new Route("/logs", "GET", new FileHandler(directory + "/logs")));
+        router.addRoute(new Route("/patch-content.txt", "GET", new FileHandler(directory + "/patch-content.txt", fileUtility)));
+        router.addRoute(new Route("/patch-content.txt", "PATCH", new PatchHandler(directory + "/patch-content.txt", fileUtility)));
+        router.addRoute(new Route("/logs", "GET", new FileHandler(directory + "/logs", fileUtility)));
         return router;
     }
 }

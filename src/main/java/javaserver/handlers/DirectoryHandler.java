@@ -1,11 +1,14 @@
 package javaserver.handlers;
 
 import java.io.File;
+import java.io.FilenameFilter;
+
 import javaserver.Request;
 
 public class DirectoryHandler implements Handler {
 
     protected static final String HTMLFORMAT = "<a href=\"%s\">%s</a></br>\r\n";
+    private static final String SLASH = "/";
     private String baseUri;
     private Request request;
 
@@ -25,24 +28,44 @@ public class DirectoryHandler implements Handler {
     }
 
     private String createDirectoryListBody(String uri) {
-        String[] files = getFilesList(uri);
+        String[] fileNamesList = getNonHiddenFileNamesList(uri);
+        String requestUri = request.getUri();
 
         String htmlDirectoryList = "";
-        if (files != null) {
-            for (String file : files) {
-              String newUri = "/" + file;
-              if (!request.getUri().equals("/")) {
-                  newUri = request.getUri() + "/" + file;
-              }
-              htmlDirectoryList += String.format(HTMLFORMAT, newUri, file);
+        if (hasFiles(fileNamesList)) {
+            for (String fileName : fileNamesList) {
+                String newUri = SLASH + fileName;
+                if (!isRoot(requestUri)) {
+                    newUri = requestUri +  SLASH + fileName;
+                }
+                htmlDirectoryList += String.format(HTMLFORMAT, newUri, fileName);
             }
         }
-
         return htmlDirectoryList;
     }
 
-    public String[] getFilesList(String directoryPath) {
+    private boolean isRoot(String uri) {
+        return uri.equals(SLASH);
+    }
+
+    private boolean isHidden(String fileName) {
+        return fileName.startsWith(".");
+    }
+
+    private boolean hasFiles(String[] fileNamesList) {
+        return fileNamesList != null;
+    }
+
+    public String[] getNonHiddenFileNamesList(String directoryPath) {
         File directory = new File(directoryPath);
-        return directory.list();
+        return directory.list(new HiddenFilenameFilter());
+    }
+
+    private static class HiddenFilenameFilter implements FilenameFilter {
+
+        @Override
+        public boolean accept(File dir, String name) {
+            return !name.startsWith(".");
+        }
     }
 }

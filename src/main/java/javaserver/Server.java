@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 public class Server {
 
@@ -13,6 +15,7 @@ public class Server {
     private boolean serverIsOn = false;
     private Router router;
     private Authenticator authenticator;
+    private ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     Server(Router router, Authenticator authenticator, int port) {
         try {
@@ -35,7 +38,7 @@ public class Server {
             while (serverIsOn) {
                 clientSocket = serverSocket.accept();
                 Runnable worker = new Worker(clientSocket, router, authenticator);
-                new Thread(worker).start();
+                threadPool.execute(worker);
             }
         } catch (IOException e) {
             System.out.println(e.toString());

@@ -1,7 +1,14 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.utility.FileUtility;
+import javaserver.utility.ResourceUtility;
 
+import java.io.IOException;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -9,19 +16,35 @@ public class FileHandlerTest {
 
     private static final String SUCCESSMESSAGE = "File Reading Successful";
 
-    Request request = new Request();
-    Response response;
-    String contentRange;
-    int contentLength = "test".getBytes().length;
-    byte[] content = "test".getBytes();
+    private FileHandler fileHandler = new FileHandler("", new FileUtility());
+    private Request request = new Request();
+
+    private Response response;
+    private MockUtility mockUtility;
 
     @Test
     public void methodThatIsAnthingButGETSetsStatusToMethodNotAllowed() {
         request.setMethod("POST");
 
-        response = new FileHandler("").handleRequest(request);
+        response = fileHandler.handleRequest(request);
 
         assertEquals(Status.MethodNotAllowed, response.getStatus());
+    }
+
+    @Test
+    public void aRangeHeaderIndicatesAPartialRequest() {
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Range", "test");
+        request.setHeaders(headers);
+
+        assertTrue(fileHandler.isPartialRequest(request));
+    }
+
+    @Test
+    public void aLackOfRangeHeaderIndicatesItIsNotAPartialRequest() {
+        request = new Request();
+
+        assertFalse(fileHandler.isPartialRequest(request));
     }
 
     @Test
@@ -40,63 +63,23 @@ public class FileHandlerTest {
     }
 
     @Test
-    public void getBeginningOfContentRangeReturnsFirstNumberInRange() {
-        contentRange = "bytes=8-9";
+    public void ifReadResourcesSucceedsResponseStatusIsSetToOk() {
+        mockUtility = new MockUtility(true);
+        request.setMethod("GET");
 
-        int firstNumberInRange = new FileHandler("").getFirstNumberInRange(contentRange, contentLength);
-        assertEquals(8, firstNumberInRange);
+        response = new FileHandler("", mockUtility).handleRequest(request);
+
+        assertEquals(Status.Ok, response.getStatus());
     }
 
     @Test
-    public void returnsContentLengthMinusNumberWhenFirstNumberIsAbsent() {
-        contentRange = "bytes=-9";
+    public void ifReadResourcesFailsResponseStatusIsSetToServerErro() {
+        mockUtility = new MockUtility(false);
+        request.setMethod("GET");
 
-        int firstNumberInRange = new FileHandler("").getFirstNumberInRange(contentRange, contentLength);
+        response = new FileHandler("", mockUtility).handleRequest(request);
 
-        assertEquals(0, firstNumberInRange);
-    }
-
-    @Test
-    public void getFirstNumberReturnsNumberWhenLastNumberIsEmpty() {
-        contentRange = "bytes=9-";
-
-        int firstNumberInRange = new FileHandler("").getFirstNumberInRange(contentRange, contentLength);
-
-        assertEquals(9, firstNumberInRange);
-    }
-
-    @Test
-    public void getEndingNumberReturnsSecondNumberInRange() {
-        contentRange = "bytes=8-9";
-
-        int lastNumberInRange = new FileHandler("").getLastNumberInRange(contentRange, contentLength);
-
-        assertEquals(10, lastNumberInRange);
-    }
-
-    @Test
-    public void returnsLengthOfContentsIfSecondNumberIsNotThere() {
-        contentRange = "bytes=9-";
-
-        int lastNumberInRange = new FileHandler("").getLastNumberInRange(contentRange, contentLength);
-
-        assertEquals(contentLength, lastNumberInRange);
-    }
-
-    @Test
-    public void returnsNumberIfFirstNumberIsMissing() {
-        contentRange = "bytes=-9";
-
-        int lastNumberInRange = new FileHandler("").getLastNumberInRange(contentRange, contentLength);
-
-        assertEquals(contentLength, lastNumberInRange);
-    }
-
-    @Test
-    public void getRangeOfBytesReturnsAppropriateRangeOfBytes() {
-        byte[] byteRange = new FileHandler("").getRangeOfBytes(content, 0, 4);
-
-        assertEquals("test", new String(byteRange));
+        assertEquals(Status.ServerError, response.getStatus());
     }
 
     private class MockFileHandler extends FileHandler {
@@ -104,16 +87,32 @@ public class FileHandlerTest {
         private boolean fileReadSuccessful;
 
         MockFileHandler(boolean fileReadSuccessful) {
-            super("");
+            super("", new FileUtility());
             this.fileReadSuccessful = fileReadSuccessful;
         }
 
         @Override
-        public byte[] getFileContents(String fileUri) {
+        public byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
             if (fileReadSuccessful) {
                 return SUCCESSMESSAGE.getBytes();
             }
             return "".getBytes();
+        }
+    }
+
+    private class MockUtility extends FileUtility {
+
+        private boolean isReadResourceSuccessful;
+
+        MockUtility(boolean isReadResourceSuccessful) {
+            this.isReadResourceSuccessful = isReadResourceSuccessful;
+        }
+
+        public byte[] readResource(String location) throws IOException {
+            if (isReadResourceSuccessful) {
+                return "".getBytes();
+            }
+            throw new IOException();
         }
     }
 }

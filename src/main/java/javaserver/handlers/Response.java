@@ -12,7 +12,7 @@ public class Response {
     private String body = "";
     private byte[] byteBody = new byte[0];
 
-    Response() {
+    public Response() {
 
     }
 

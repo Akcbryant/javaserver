@@ -1,6 +1,7 @@
 package javaserver.handlers;
 
 import javaserver.Request;
+import javaserver.helpers.ParameterDecoder;
 
 public class ParametersHandler implements Handler {
 

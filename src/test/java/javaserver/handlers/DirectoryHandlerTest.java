@@ -7,45 +7,42 @@ import org.junit.Test;
 
 public class DirectoryHandlerTest {
 
-    Request request = new Request();
-    Response response;
+    private static final String TEST_FILE_NAME = "test";
+    private static final String TEST_URI = "/test";
+    private static final String EXPECTED = String.format(DirectoryHandler.HTMLFORMAT, TEST_URI, TEST_FILE_NAME);
+
+    private Request request = new Request();
+    private Response response;
 
     @Test
-    public void createDirectoryListBody_GivenAnEmptyDirectory_ReturnsEmptyString() {
-        response = new MockWithEmptyDirectory().handleRequest(request);
+    public void givenNoFilesReturnsAnEmptyBody() {
+        response = new MockDirectoryHandler(true).handleRequest(request);
 
         assertEquals("", response.getBody());
     }
 
     @Test
-    public void createDirectoryListBody_GivenANonEmptyDirectory_ReturnsHTMLListing() {
-        response = new MockWithNonEmptyDirectory().handleRequest(request);
+    public void givenDirectoryIsNotEmptyCreateHTMLListForFiles() {
+        response = new MockDirectoryHandler(false).handleRequest(request);
 
-        String expected = String.format(DirectoryHandler.HTMLFORMAT, "/test", "test");
-        assertEquals(expected + expected + expected, response.getBody());
+        assertEquals(EXPECTED + EXPECTED + EXPECTED, response.getBody());
     }
 
-    private class MockWithEmptyDirectory extends DirectoryHandler {
+    private class MockDirectoryHandler extends DirectoryHandler {
 
-        public MockWithEmptyDirectory() {
+        private boolean directoryIsEmpty;
+
+        MockDirectoryHandler(boolean directoryIsEmpty) {
             super("");
+            this.directoryIsEmpty = directoryIsEmpty;
         }
 
         @Override
-        public String[] getFilesList(String directoryPath) {
-            return null;
-        }
-    }
-
-    private class MockWithNonEmptyDirectory extends DirectoryHandler {
-
-        public MockWithNonEmptyDirectory() {
-            super("");
-        }
-
-        @Override
-        public String[] getFilesList(String directoryPath) {
-            return new String[] {"test", "test", "test"};
+        public String[] getNonHiddenFileNamesList(String directoryPath) {
+            if (directoryIsEmpty) {
+                return null;
+            }
+            return new String[] {TEST_FILE_NAME, TEST_FILE_NAME, TEST_FILE_NAME};
         }
     }
 }

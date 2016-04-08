@@ -10,31 +10,33 @@ import org.junit.Test;
 
 public class AuthenticatorTest {
 
-    Authenticator authenticator = new Authenticator();
-    Route route;
-    Request request = new Request();
-    String testBase64 = "dGVzdGluZ1Rlc3Q=";
-    String expectedString = "testingTest";
+    private static final Route PROTECTED_ROUTE = new Route("/foo", "GET");
+    private static final String BASIC = "Basic ";
+    private static final String BASE_64 = "dGVzdGluZ1Rlc3Q=";
+    private static final String TEST_STRING = "testingTest";
+    private static final String USER = "test:subject";
+
+    private Authenticator authenticator = new Authenticator();
+    private Route route;
+    private Request request = new Request();
 
     @Test
     public void returnsFalseIfRouteIsNotProtected() {
-        assertFalse(authenticator.isRouteProtected(route));
+        assertFalse(authenticator.isRouteProtected(PROTECTED_ROUTE));
     }
 
     @Test
     public void returnsTrueIfRouteIsProtected() {
-        route = new Route("/foo", "GET");
-        authenticator.addToProtectedRoutes(route);
+        authenticator.addToProtectedRoutes(PROTECTED_ROUTE);
 
-        Route testRoute = new Route("/foo", "GET");
-        assertTrue(authenticator.isRouteProtected(testRoute));
+        assertTrue(authenticator.isRouteProtected(PROTECTED_ROUTE));
     }
 
     @Test
     public void returnsTrueIfUsernameAndPasswordMatch() {
-        authenticator.addAuthenticatedUser("test:subject");
+        authenticator.addAuthenticatedUser(USER);
 
-        assertTrue(authenticator.isUserAuthenticated("test:subject"));
+        assertTrue(authenticator.isUserAuthenticated(USER));
     }
 
     @Test
@@ -44,7 +46,7 @@ public class AuthenticatorTest {
 
     @Test
     public void decodesBase64EncodedString() {
-        assertEquals(expectedString, authenticator.decodeString(testBase64));
+        assertEquals(TEST_STRING, authenticator.decodeString(BASE_64));
     }
 
     @Test
@@ -55,9 +57,9 @@ public class AuthenticatorTest {
     @Test
     public void givenCorrectCredentialsReturnsTrue() {
         HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Authorization", "Basic " + testBase64);
+        headers.put(authenticator.AUTH_STRING, BASIC + BASE_64);
 
-        authenticator.addAuthenticatedUser("testingTest");
+        authenticator.addAuthenticatedUser(TEST_STRING);
         request.setHeaders(headers);
 
         assertTrue(authenticator.isRequestAuthenticated(request));

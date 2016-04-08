@@ -4,6 +4,7 @@ import javaserver.Request;
 
 public class OptionsHandler implements Handler {
 
+    private static final String ALLOWHEADER = "Allow:";
     String availableMethods;
 
     public OptionsHandler(String availableMethods) {
@@ -14,7 +15,8 @@ public class OptionsHandler implements Handler {
         Response response = new Response();
 
         response.setStatus(Status.Ok);
-        String headers = "Allow:" + availableMethods;
+
+        String headers = ALLOWHEADER + availableMethods;
         response.setHeaders(headers);
 
         return response;

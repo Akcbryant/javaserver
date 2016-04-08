@@ -15,8 +15,8 @@ public class AppTest {
     }
 
     @Test
-    public void getArgs_GivenNoArgs_DirectoryAndPortAreDefaults() {
-        args = new String[0];
+    public void getArgsUsesDefaultArgsWhenGivenNoParameters() {
+        args = new String[] {""};
         testAppWithArgs(args);
 
         assertEquals(5000, app.getPort());
@@ -24,7 +24,7 @@ public class AppTest {
     }
 
     @Test
-    public void getArgs_GivenBothArgs_SetsDirectoryAndPort() {
+    public void getArgsSetsDirectoryAndPort() {
         args = new String[] {"-p", "1234", "-d", "test"};
         testAppWithArgs(args);
 
@@ -33,7 +33,7 @@ public class AppTest {
     }
 
     @Test
-    public void getArgs_GivenOutOfOrderArgs_SetsDirectoryAndPort() {
+    public void getArgsSetsDirectoryAndPortWhenParametersAreOutOfOrder() {
         args = new String[] {"-d", "test", "-p", "1234"};
         testAppWithArgs(args);
 

@@ -18,7 +18,6 @@ public class Route {
     Route(String uri, String method) {
         this.uri = uri;
         this.method = method;
-        this.handler = new FileHandler("");
     }
 
     public String toString() {

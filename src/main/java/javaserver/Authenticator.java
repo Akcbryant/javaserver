@@ -6,6 +6,8 @@ import java.util.Base64;
 
 public class Authenticator {
 
+    protected static final String AUTH_STRING = "Authorization";
+
     private ArrayList<Route> protectedRoutes = new ArrayList<Route>();
     private ArrayList<String> authenticatedUsers = new ArrayList<String>();
 
@@ -27,12 +29,11 @@ public class Authenticator {
     public boolean isRequestAuthenticated(Request request) {
         HashMap <String, String> headers = request.getHeaders();
 
-        if (headers.containsKey("Authorization")) {
-            String auth = headers.get("Authorization");
+        if (headers.containsKey(AUTH_STRING)) {
+            String auth = headers.get(AUTH_STRING);
             String encodedCredentials = auth.split(" ")[1];
             String decodedCredentials = decodeString(encodedCredentials);
 
-            System.out.println(auth + " " + encodedCredentials + " " + decodedCredentials);
             return isUserAuthenticated(decodedCredentials);
         }
 
