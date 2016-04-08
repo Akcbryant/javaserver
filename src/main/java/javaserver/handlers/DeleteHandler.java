@@ -17,12 +17,14 @@ public class DeleteHandler implements Handler {
 
     public Response handleRequest(Request request) {
         Response response = new Response();
+
         try {
             deleteFile(fileUri, resourceUtility);
             response.setStatus(Status.Ok);
         } catch (IOException e) {
             response.setStatus(Status.ServerError);
         }
+
         return response;
     }
 

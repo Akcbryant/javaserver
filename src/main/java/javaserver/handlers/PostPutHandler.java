@@ -17,6 +17,7 @@ public class PostPutHandler implements Handler {
 
     public Response handleRequest(Request request) {
         Response response = new Response();
+
         try {
             writeData(fileUri, request.getBody().getBytes(), resourceUtility);
             response.setStatus(Status.Ok);

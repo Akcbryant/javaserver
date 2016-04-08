@@ -28,12 +28,12 @@ public class DirectoryHandler implements Handler {
     }
 
     private String createDirectoryListBody(String uri) {
-        String[] fileNames = getFilesList(uri);
+        String[] fileNamesList = getNonHiddenFileNamesList(uri);
         String requestUri = request.getUri();
 
         String htmlDirectoryList = "";
-        if (fileNames != null) {
-            for (String fileName : fileNames) {
+        if (hasFiles(fileNamesList)) {
+            for (String fileName : fileNamesList) {
                 String newUri = SLASH + fileName;
                 if (!isRoot(requestUri)) {
                     newUri = requestUri +  SLASH + fileName;
@@ -52,7 +52,11 @@ public class DirectoryHandler implements Handler {
         return fileName.startsWith(".");
     }
 
-    public String[] getFilesList(String directoryPath) {
+    private boolean hasFiles(String[] fileNamesList) {
+        return fileNamesList != null;
+    }
+
+    public String[] getNonHiddenFileNamesList(String directoryPath) {
         File directory = new File(directoryPath);
         return directory.list(new HiddenFilenameFilter());
     }

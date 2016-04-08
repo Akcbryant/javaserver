@@ -42,6 +42,7 @@ public class FileHandler implements Handler {
         byte[] body = getFileContents(fileUri, resourceUtility);
         contentSize = body.length;
         response.setBody(body);
+
         return response;
     }
 

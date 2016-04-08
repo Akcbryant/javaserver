@@ -38,7 +38,7 @@ public class DirectoryHandlerTest {
         }
 
         @Override
-        public String[] getFilesList(String directoryPath) {
+        public String[] getNonHiddenFileNamesList(String directoryPath) {
             if (directoryIsEmpty) {
                 return null;
             }
