@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class FileHandlerTest {
 
-    private static final String SUCCESSMESSAGE = "File Reading Successful";
+    private static final String SUCCESS_MESSAGE = "File Reading Successful";
     private static final String POST = "POST";
     private static final String TEST_STRING = "test";
 
@@ -57,7 +57,7 @@ public class FileHandlerTest {
         request.setMethod(FileHandler.GET);
         response = new MockFileHandler(FILE_READ_SUCCEEDED).handleRequest(request);
 
-        assertEquals(SUCCESSMESSAGE, new String(response.getByteBody()));
+        assertEquals(SUCCESS_MESSAGE, new String(response.getByteBody()));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class FileHandlerTest {
         @Override
         public byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
             if (fileReadSuccessful) {
-                return SUCCESSMESSAGE.getBytes();
+                return SUCCESS_MESSAGE.getBytes();
             }
             return "".getBytes();
         }
