@@ -15,14 +15,14 @@ public class DirectoryHandlerTest {
     private Response response;
 
     @Test
-    public void givenNoFilesReturnsAnEmptyBody() {
+    public void returnsAnEmptyBodyWhenGivenNoFiles() {
         response = new MockDirectoryHandler(true).handleRequest(request);
 
         assertEquals("", response.getBody());
     }
 
     @Test
-    public void givenDirectoryIsNotEmptyCreateHTMLListForFiles() {
+    public void createHTMLListForFilesWhenGivenDirectoryIsNotEmpty() {
         response = new MockDirectoryHandler(false).handleRequest(request);
 
         assertEquals(EXPECTED + EXPECTED + EXPECTED, response.getBody());
