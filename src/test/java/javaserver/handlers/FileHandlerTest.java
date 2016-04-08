@@ -15,6 +15,11 @@ import org.junit.Test;
 public class FileHandlerTest {
 
     private static final String SUCCESSMESSAGE = "File Reading Successful";
+    private static final String POST = "POST";
+    private static final String TEST_STRING = "test";
+
+    private static final boolean FILE_READ_SUCCEEDED = true;
+    private static final boolean FILE_READ_FAILED = false;
 
     private FileHandler fileHandler = new FileHandler("", new FileUtility());
     private Request request = new Request();
@@ -24,7 +29,7 @@ public class FileHandlerTest {
 
     @Test
     public void methodThatIsAnthingButGETSetsStatusToMethodNotAllowed() {
-        request.setMethod("POST");
+        request.setMethod(POST);
 
         response = fileHandler.handleRequest(request);
 
@@ -34,7 +39,7 @@ public class FileHandlerTest {
     @Test
     public void aRangeHeaderIndicatesAPartialRequest() {
         HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Range", "test");
+        headers.put(FileHandler.RANGE_HEADER, TEST_STRING);
         request.setHeaders(headers);
 
         assertTrue(fileHandler.isPartialRequest(request));
@@ -49,23 +54,23 @@ public class FileHandlerTest {
 
     @Test
     public void setResponseBodyToSuccessfullyReadFileContents() {
-        request.setMethod("GET");
-        response = new MockFileHandler(true).handleRequest(request);
+        request.setMethod(FileHandler.GET);
+        response = new MockFileHandler(FILE_READ_SUCCEEDED).handleRequest(request);
 
         assertEquals(SUCCESSMESSAGE, new String(response.getByteBody()));
     }
 
     @Test
     public void setResponseBodyToEmptyUponFailureToReadFileContents() {
-        response = new MockFileHandler(false).handleRequest(request);
+        response = new MockFileHandler(FILE_READ_FAILED).handleRequest(request);
 
         assertEquals("", response.getBody());
     }
 
     @Test
     public void ifReadResourcesSucceedsResponseStatusIsSetToOk() {
-        mockUtility = new MockUtility(true);
-        request.setMethod("GET");
+        mockUtility = new MockUtility(FILE_READ_SUCCEEDED);
+        request.setMethod(FileHandler.GET);
 
         response = new FileHandler("", mockUtility).handleRequest(request);
 
@@ -74,8 +79,8 @@ public class FileHandlerTest {
 
     @Test
     public void ifReadResourcesFailsResponseStatusIsSetToServerErro() {
-        mockUtility = new MockUtility(false);
-        request.setMethod("GET");
+        mockUtility = new MockUtility(FILE_READ_FAILED);
+        request.setMethod(FileHandler.GET);
 
         response = new FileHandler("", mockUtility).handleRequest(request);
 
