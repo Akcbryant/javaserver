@@ -9,15 +9,13 @@ import org.junit.Test;
 
 public class UnauthorizedHandlerTest {
 
-    private static final String AUTH_HEADER = "WWW-Authenticate: Basic";
-
     @Test
     public void responseShouldHaveAUTH_HEADER() {
         Request request = new Request();
 
         Response response = new MockUnauthorizedHandler().handleRequest(request);
 
-        assertEquals(AUTH_HEADER, response.getHeaders());
+        assertEquals(UnauthorizedHandler.AUTH_HEADER, response.getHeaders());
     }
 
     private class MockUnauthorizedHandler extends UnauthorizedHandler {

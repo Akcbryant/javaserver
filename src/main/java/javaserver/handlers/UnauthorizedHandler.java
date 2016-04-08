@@ -8,7 +8,7 @@ import java.io.IOException;
 public class UnauthorizedHandler implements Handler {
 
     private static final String LOGS_LOCATION = "/logs";
-    private static final String AUTH_HEADER = "WWW-Authenticate: Basic";
+    protected static final String AUTH_HEADER = "WWW-Authenticate: Basic=javaserver";
 
     private ResourceUtility resourceUtility;
     private String fileUri;

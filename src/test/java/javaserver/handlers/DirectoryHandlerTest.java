@@ -7,8 +7,12 @@ import org.junit.Test;
 
 public class DirectoryHandlerTest {
 
-    Request request = new Request();
-    Response response;
+    private static final String TEST_FILE_NAME = "test";
+    private static final String TEST_URI = "/test";
+    private static final String EXPECTED = String.format(DirectoryHandler.HTMLFORMAT, TEST_URI, TEST_FILE_NAME);
+
+    private Request request = new Request();
+    private Response response;
 
     @Test
     public void givenNoFilesReturnsAnEmptyBody() {
@@ -18,14 +22,10 @@ public class DirectoryHandlerTest {
     }
 
     @Test
-    public void 
-
-    @Test
-    public void returnHTMLListingWhenFileArePresent() {
+    public void givenDirectoryIsNotEmptyCreateHTMLListForFiles() {
         response = new MockDirectoryHandler(false).handleRequest(request);
 
-        String expected = String.format(DirectoryHandler.HTMLFORMAT, "/test", "test");
-        assertEquals(expected + expected + expected, response.getBody());
+        assertEquals(EXPECTED + EXPECTED + EXPECTED, response.getBody());
     }
 
     private class MockDirectoryHandler extends DirectoryHandler {
@@ -42,7 +42,7 @@ public class DirectoryHandlerTest {
             if (directoryIsEmpty) {
                 return null;
             }
-            return new String[] {"test", "test", "test"};
+            return new String[] {TEST_FILE_NAME, TEST_FILE_NAME, TEST_FILE_NAME};
         }
     }
 }
