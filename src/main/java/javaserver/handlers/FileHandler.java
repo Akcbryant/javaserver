@@ -52,9 +52,9 @@ public class FileHandler implements Handler {
     }
 
     private Handler getTypeOfFileHandler(Request request) {
-        if (isPartialRequest(request)) return new PartialHandler(fileUri, resourceUtility);
-        if (isImageRequest(request)) return new ImageHandler(fileUri, resourceUtility);
-        else return null;
+        if (isPartialRequest(request)) { return new PartialHandler(fileUri, resourceUtility); }
+        if (isImageRequest(request)) { return new ImageHandler(fileUri, resourceUtility); }
+        else { return null };
     }
 
     protected boolean isPartialRequest(Request request) {
