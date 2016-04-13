@@ -10,11 +10,16 @@ public class PartialHandler extends FileHandler {
     private static final String BYTE_SEPARATOR = "-";
     private static final String HEADER_SEPARATOR = "=";
     private static final String CONTENT_LENGTH_HEADER = "Content-Length: ";
+    private static final String RANGE_HEADER = "Range";
     private static final String NEWLINE = System.getProperty("line.separator");
 
     private String fileUri;
     private ResourceUtility resourceUtility;
     private Response response = new Response();
+
+    public PartialHandler() {
+
+    }
 
     public PartialHandler(String fileUri, ResourceUtility resourceUtility) {
         super(fileUri, resourceUtility);
@@ -23,7 +28,7 @@ public class PartialHandler extends FileHandler {
     }
 
     public Response handleRequest(Request request) {
-        String range = request.getHeaders().get("Range");
+        String range = request.getHeaders().get(RANGE_HEADER);
 
         byte[] body = getFileContents(fileUri, resourceUtility);
 
@@ -37,11 +42,6 @@ public class PartialHandler extends FileHandler {
         response.setStatus(Status.PartialContent);
 
         return response;
-    }
-
-    private String makeHeaders(int contentLength) {
-        String headers = CONTENT_LENGTH_HEADER + contentLength + NEWLINE; 
-        return headers;
     }
 
     public int getFirstNumberInRange(String contentRange, int contentLength) {
@@ -66,5 +66,11 @@ public class PartialHandler extends FileHandler {
             return lastNumber + 1;
         }
     }
+
+    private String makeHeaders(int contentLength) {
+        String headers = CONTENT_LENGTH_HEADER + contentLength + NEWLINE; 
+        return headers;
+    }
+
 }
 

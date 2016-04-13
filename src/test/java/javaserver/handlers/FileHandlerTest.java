@@ -32,22 +32,6 @@ public class FileHandlerTest {
     }
 
     @Test
-    public void aRangeHeaderIndicatesAPartialRequest() {
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Range", "test");
-        request.setHeaders(headers);
-
-        assertTrue(fileHandler.isPartialRequest(request));
-    }
-
-    @Test
-    public void aLackOfRangeHeaderIndicatesItIsNotAPartialRequest() {
-        request = new Request();
-
-        assertFalse(fileHandler.isPartialRequest(request));
-    }
-
-    @Test
     public void setResponseBodyToSuccessfullyReadFileContents() {
         request.setMethod("GET");
         response = new MockFileHandler(true).handleRequest(request);
