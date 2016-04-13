@@ -10,8 +10,11 @@ public class ImageHandler extends FileHandler {
     private static final String NEWLINE = System.getProperty("line.separator");
 
     private String fileUri;
-    private Response response = new Response();
     private ResourceUtility resourceUtility;
+
+    protected ImageHandler() {
+
+    }
 
     public ImageHandler(String fileUri, ResourceUtility resourceUtility) {
         super(fileUri, resourceUtility);

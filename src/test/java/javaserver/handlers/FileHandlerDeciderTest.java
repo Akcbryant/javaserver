@@ -10,23 +10,43 @@ import java.util.HashMap;
 
 public class FileHandlerDeciderTest {
 
-    Request request = new Request();
+    private static final String TEST_STRING = "test";
+    private static final String IMAGE_URI = "/test.png";
+
+    private Request request = new Request();
+    private FileHandler fileHandler;
+
+    private FileHandler decideFileHandler(Request request) {
+        return FileHandlerDecider.decideHandler(request, "", new FileUtility());
+    }
 
     @Test
-    public void aRangeHeaderIndicatesAPartialRequest() {
+    public void returnPartialHandlerWhenGivenAPartialRequest() {
         HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Range", "test");
+        headers.put(FileHandlerDecider.RANGE_HEADER, TEST_STRING);
         request.setHeaders(headers);
 
-        FileHandler fileHandler = FileHandlerDecider.decideHandler(request, "", new FileUtility());
+        fileHandler = decideFileHandler(request);
+
         assertEquals(new PartialHandler().getClass(), fileHandler.getClass());
+    }
+
+    @Test
+    public void returnImageHandlerWhenGivenAnImageUri() {
+        request = new Request();
+        request.setUri(IMAGE_URI);
+
+        fileHandler = decideFileHandler(request);
+
+        assertEquals(new ImageHandler().getClass(), fileHandler.getClass());
     }
 
     @Test
     public void aLackOfRangeHeaderIndicatesItIsNotAPartialRequest() {
         request = new Request();
 
-        FileHandler fileHandler = FileHandlerDecider.decideHandler(request, "", new FileUtility());
+        fileHandler = decideFileHandler(request);
+
         assertEquals(new FileHandler().getClass(), fileHandler.getClass());
     }
 }

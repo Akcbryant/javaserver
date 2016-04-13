@@ -9,9 +9,9 @@ import java.util.List;
 public class FileHandlerDecider {
 
     private final static String TYPE_SPLIT = "\\.";
-    private final static String RANGE_HEADER = "Range";
+    protected final static String RANGE_HEADER = "Range";
 
-    private final static List ACCEPTABLE_IMAGE_FORMATS = Arrays.asList(".jpg", ".gif", ".png");
+    private final static List ACCEPTABLE_IMAGE_FORMATS = Arrays.asList("jpg", "gif", "png");
 
     public static FileHandler decideHandler(Request request, String fileUri, ResourceUtility resourceUtility) {
         if (isPartialRequest(request)) { return new PartialHandler(fileUri, resourceUtility); }
@@ -27,6 +27,9 @@ public class FileHandlerDecider {
         String uri = request.getUri();
         String[] splitUri = uri.split(TYPE_SPLIT);
 
-        return (splitUri.length > 1 && ACCEPTABLE_IMAGE_FORMATS.contains(splitUri[1]));
+        if (splitUri.length > 1) {
+        return ACCEPTABLE_IMAGE_FORMATS.contains(splitUri[1]);
+        }
+        return false;
     }
 }
