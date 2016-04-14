@@ -1,7 +1,5 @@
 package javaserver;
 
-import java.io.File;
-
 import javaserver.handlers.DirectoryHandler;
 import javaserver.handlers.FileHandler;
 import javaserver.handlers.FileHandlerDecider;
@@ -12,6 +10,8 @@ import javaserver.handlers.Response;
 import javaserver.handlers.UnauthorizedHandler;
 import javaserver.utility.FileUtility;
 import javaserver.utility.ResourceUtility;
+
+import java.io.File;
 
 public class RequestHandler {
 
@@ -54,11 +54,11 @@ public class RequestHandler {
         String fileUri = router.getRootPath() + uri;
         File file = getFile(fileUri);
 
-        if (file.isFile()) {
+        if (isFile(file)) {
             return FileHandlerDecider.decideHandler(request, fileUri, fileUtility);
         }
 
-        if (file.isDirectory()) { return new DirectoryHandler(fileUri); }
+        if (isDirectory(file)) { return new DirectoryHandler(fileUri); }
 
         return new NotFoundHandler();
     }
@@ -69,5 +69,13 @@ public class RequestHandler {
 
     public File getFile(String path) {
         return new File(path);
+    }
+
+    protected boolean isFile(File file) {
+        return file.isFile();
+    }
+
+    protected boolean isDirectory(File file) {
+        return file.isDirectory();
     }
 }

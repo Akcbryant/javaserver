@@ -11,11 +11,13 @@ import java.io.IOException;
 public class ResponseTest {
 
     private static final String EXPECTED = "HTTP/1.1 200 OK\r\n\r\n";
-    Response response = new Response("HTTP/1.1", Status.Ok, "", "");
+    private static final String TEST_STRING = "test";
+
+    private Response response = new Response("HTTP/1.1", Status.Ok, "", "");
 
     @Test
     public void toStringConversionGivesProperFormat() {
-        assertEquals("HTTP/1.1 200 OK\r\n\r\n", response.toString());
+        assertEquals(EXPECTED, response.toString());
     }
 
     @Test
@@ -26,10 +28,10 @@ public class ResponseTest {
 
     @Test
     public void getBytesReturnsByteArrayOfResponseWhenBodyIsByteArray() throws IOException {
-        byte[] testByteArray = "test".getBytes();
+        byte[] testByteArray = TEST_STRING.getBytes();
         response.setBody(testByteArray);
 
         String responseString = new String(response.getBytes());
-        assertEquals(EXPECTED + "test", responseString);
+        assertEquals(EXPECTED + TEST_STRING, responseString);
     }
 }

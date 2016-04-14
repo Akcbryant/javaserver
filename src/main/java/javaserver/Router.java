@@ -54,11 +54,4 @@ public class Router {
 
         return availableMethods;
     }
-
-    private String stripLastLetter(String string) {
-        if (string != null && string.length() > 0) {
-            string = string.substring(0, string.length()-1);
-        }
-        return string;
-    }
 }

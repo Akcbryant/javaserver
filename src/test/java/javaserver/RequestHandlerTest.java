@@ -6,6 +6,7 @@ import javaserver.handlers.FileHandler;
 import javaserver.handlers.Handler;
 import javaserver.handlers.HeadHandler;
 import javaserver.handlers.MethodNotAllowedHandler;
+import javaserver.handlers.NotFoundHandler;
 import javaserver.handlers.OptionsHandler;
 import javaserver.handlers.ParametersHandler;
 import javaserver.handlers.PostPutHandler;
@@ -19,12 +20,13 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.Before;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class RequestHandlerTest {
 
     private Authenticator authenticator;
-    private Router router;
+    private Router testRouter;
     private RequestHandler requestHandler;
     private Response response;
     private Request request;
@@ -47,10 +49,11 @@ public class RequestHandlerTest {
     private static final RedirectHandler REDIRECT_HANDLER = new RedirectHandler("");
     private static final MethodNotAllowedHandler METHOD_NOT_ALLOWED_HANDLER = new MethodNotAllowedHandler();
     private static final UnauthorizedHandler UNAUTHORIZED_HANDLER = new UnauthorizedHandler("", UTILITY);
+    private static final NotFoundHandler NOT_FOUND_HANDLER = new NotFoundHandler();
 
     @Before
     public void setUp() {
-        Router testRouter = new Router(".");
+        testRouter = new Router(".");
         testRouter.addRoute(new Route("/form", "GET", FILE_HANDLER));
         testRouter.addRoute(new Route("/form", "DELETE", DELETE_HANDLER));
         testRouter.addRoute(new Route("/method_options", "PUT", POST_PUT_HANDLER));
@@ -75,12 +78,6 @@ public class RequestHandlerTest {
         assertNotNull(response);
     }
 
-    @Test
-    public void returnDirectoryHandlerFromAGetToANonCustomRouteThatIsADirectory() {
-        handler = determineHandler("GET", "/");
-
-        assertEquals(DIRECTORY_HANDLER.getClass(), handler.getClass());
-    }
 
     @Test
     public void postToCustomRouteReturnsPostPutHandler() {
@@ -153,5 +150,52 @@ public class RequestHandlerTest {
         handler = requestHandler.determineHandler(request);
 
         assertEquals(FILE_HANDLER.getClass(), handler.getClass());
+    }
+
+    @Test
+    public void returnFileHandlerIfTheRequestIsNotCustomAndIsAFile() {
+        request = new Request();
+
+        handler = new MockRequestHandler(true, false).determineHandler(request);
+
+        assertEquals(FILE_HANDLER.getClass(), handler.getClass());
+    }
+
+    @Test
+    public void returnDirectoryHandlerFromAGetToANonCustomRouteThatIsADirectory() {
+        request = new Request();
+
+        handler = new MockRequestHandler(false, true).determineHandler(request);
+
+        assertEquals(DIRECTORY_HANDLER.getClass(), handler.getClass());
+    }
+
+    @Test
+    public void returnNotFoundHandlerIfItCantFindAnyplaceElse() {
+        handler = determineHandler("TEST", "/TESTINGTEST");
+
+        assertEquals(NOT_FOUND_HANDLER.getClass(), handler.getClass());
+    }
+
+    private class MockRequestHandler extends RequestHandler {
+
+        private boolean isFile;
+        private boolean isDirectory;
+
+        MockRequestHandler(boolean isFile, boolean isDirectory) {
+            super(testRouter, authenticator);
+            this.isFile = isFile;
+            this.isDirectory = isDirectory;
+        }
+
+        @Override
+        protected boolean isFile(File file) {
+            return isFile;
+        }
+
+        @Override
+        protected boolean isDirectory(File file) {
+            return isDirectory;
+        }
     }
 }
