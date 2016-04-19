@@ -9,6 +9,7 @@ import javaserver.handlers.ParametersHandler;
 import javaserver.handlers.PatchHandler;
 import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
+import javaserver.helpers.ArgumentParser;
 import javaserver.utility.FileUtility;
 
 public class App {
@@ -25,20 +26,14 @@ public class App {
     }
 
     public static void main(String[] args) {
-        getArgs(args);
+        String directory = ArgumentParser.getDirectory(args);
+        int port = ArgumentParser.getPort(args);
 
         Router cobSpecRouter = makeCobSpecRouter(directory);
         Authenticator cobSpecAuth = makeCobSpecAuthenticator();
 
         Server server = new Server(cobSpecRouter, cobSpecAuth, port);
         server.turnOn();
-    }
-
-    public static void getArgs(String[] args) {
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-p")) port = Integer.parseInt(args[i + 1]);
-            else if (args[i].equals("-d")) directory = args[i + 1];
-        }
     }
 
     private static Authenticator makeCobSpecAuthenticator() {
