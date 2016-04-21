@@ -5,29 +5,33 @@ import org.junit.Test;
 
 public class ArgumentParserTest {
 
-    String[] args;
+    private static final String TEST_PORT = "1234";
+    private static final String TEST_DIRECTORY = "test";
+
+    private String[] args;
 
     @Test
     public void getArgsUsesDefaultArgsWhenGivenNoParameters() {
         args = new String[] {""};
 
-        assertEquals(5000, ArgumentParser.getPort(args));
-        assertEquals(System.getProperty("user.dir"), ArgumentParser.getDirectory(args));
+        assertEquals(ArgumentParser.DEFAULT_PORT, ArgumentParser.getPort(args));
+        assertEquals(ArgumentParser.DEFAULT_DIRECTORY, ArgumentParser.getDirectory(args));
     }
 
     @Test
     public void getArgsSetsDirectoryAndPort() {
-        args = new String[] {"-p", "1234", "-d", "test"};
+        args = new String[] {ArgumentParser.PORT_FLAG, TEST_PORT,
+                             ArgumentParser.DIRECTORY_FLAG, TEST_DIRECTORY};
 
-        assertEquals(1234, ArgumentParser.getPort(args));
-        assertEquals("test", ArgumentParser.getDirectory(args));
+        assertEquals(TEST_PORT, ArgumentParser.getPort(args));
+        assertEquals(TEST_DIRECTORY, ArgumentParser.getDirectory(args));
     }
 
     @Test
     public void getArgsSetsDirectoryAndPortWhenParametersAreOutOfOrder() {
-        args = new String[] {"-d", "test", "-p", "1234"};
+        args = new String[] {ArgumentParser.DIRECTORY_FLAG, TEST_DIRECTORY, ArgumentParser.PORT_FLAG, TEST_PORT};
 
-        assertEquals(1234, ArgumentParser.getPort(args));
-        assertEquals("test", ArgumentParser.getDirectory(args));
+        assertEquals(TEST_PORT, ArgumentParser.getPort(args));
+        assertEquals(TEST_DIRECTORY, ArgumentParser.getDirectory(args));
     }
 }

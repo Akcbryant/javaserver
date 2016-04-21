@@ -2,27 +2,26 @@ package javaserver.helpers;
 
 public class ArgumentParser {
 
-    public static int getPort(String[] args) {
-        int port = 5000;
+    protected static final String PORT_FLAG = "-p";
+    protected static final String DIRECTORY_FLAG = "-d";
 
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-p")) {
-              port = Integer.parseInt(args[i + 1]);
-            }
-        }
+    protected static final String DEFAULT_PORT = "5000";
+    protected static final String DEFAULT_DIRECTORY = System.getProperty("user.dir");
 
-        return port;
+    public static String getPort(String[] args) {
+        return getArgument(args, PORT_FLAG, DEFAULT_PORT);
     }
 
     public static String getDirectory(String[] args) {
-        String directory = System.getProperty("user.dir");
+        return getArgument(args, DIRECTORY_FLAG, DEFAULT_DIRECTORY);
+    }
 
+    private static String getArgument(String[] args, String flag, String defaultValue) {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-d")) {
-                directory = args[i + 1];
-          }
+            if (args[i].equals(flag)) {
+                return args[i + 1];
+            }
         }
-
-        return directory;
+        return defaultValue;
     }
 }
