@@ -14,7 +14,7 @@ public class ParametersHandlerTest {
 
         Response response = new ParametersHandler().handleRequest(request);
 
-        assertEquals(Status.Ok, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
         assertEquals("variable1 =  <, \r\nvariable2 = stuff", response.getBody());
     }
 

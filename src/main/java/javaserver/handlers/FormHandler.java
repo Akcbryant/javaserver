@@ -15,10 +15,10 @@ public class FormHandler extends FileHandler {
     public byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
         try {
             byte[] content = resourceUtility.readResource(fileUri);
-            response.setStatus(Status.Ok);
+            response.setStatus(Status.OK);
             return content;
         } catch (IOException e) {
-            response.setStatus(Status.Ok);
+            response.setStatus(Status.OK);
             return new byte[0];
         }
     }

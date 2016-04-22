@@ -19,9 +19,9 @@ public class DeleteHandler implements Handler {
         Response response = new Response();
         try {
             deleteFile(fileUri, resourceUtility);
-            response.setStatus(Status.Ok);
+            response.setStatus(Status.OK);
         } catch (IOException e) {
-            response.setStatus(Status.ServerError);
+            response.setStatus(Status.SERVER_ERROR);
         }
         return response;
     }

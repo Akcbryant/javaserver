@@ -19,14 +19,14 @@ public class DeleteHandlerTest {
     public void deleteHandlerReturnsOKResponseWhenDeleteFileWorks() {
         response = new MockDeleteHandler(true).handleRequest(request);
 
-        assertEquals(Status.Ok, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
     }
 
     @Test
     public void deleteHandlerReturnsNotFoundResponseWhenDeleteFileFails() {
         response = new MockDeleteHandler(false).handleRequest(request);
 
-        assertEquals(Status.ServerError, response.getStatus());
+        assertEquals(Status.SERVER_ERROR, response.getStatus());
     }
 
     private class MockDeleteHandler extends DeleteHandler {

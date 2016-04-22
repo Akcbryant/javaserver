@@ -10,7 +10,7 @@ public class ParametersHandler implements Handler {
     public Response handleRequest(Request request) {
         Response response = new Response();
 
-        response.setStatus(Status.Ok);
+        response.setStatus(Status.OK);
 
         String body = decoder.decodeUri(request.getUri());
         response.setBody(body);

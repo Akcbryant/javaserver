@@ -13,7 +13,7 @@ public class ResponseTest {
     private static final String EXPECTED = "HTTP/1.1 200 OK\r\n\r\n";
     private static final String TEST_STRING = "test";
 
-    private Response response = new Response("HTTP/1.1", Status.Ok, "", "");
+    private Response response = new Response("HTTP/1.1", Status.OK, "", "");
 
     @Test
     public void toStringConversionGivesProperFormat() {

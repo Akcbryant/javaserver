@@ -14,20 +14,9 @@ import javaserver.utility.FileUtility;
 
 public class App {
 
-    private static String directory = System.getProperty("user.dir");
-    private static int port = 5000;
-
-    public int getPort() {
-        return port;
-    }
-
-    public String getDirectory() {
-        return directory;
-    }
-
     public static void main(String[] args) {
         String directory = ArgumentParser.getDirectory(args);
-        int port = ArgumentParser.getPort(args);
+        int port = Integer.parseInt(ArgumentParser.getPort(args));
 
         Router cobSpecRouter = makeCobSpecRouter(directory);
         Authenticator cobSpecAuth = makeCobSpecAuthenticator();

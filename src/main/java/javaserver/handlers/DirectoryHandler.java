@@ -22,7 +22,7 @@ public class DirectoryHandler implements Handler {
 
         String body = createDirectoryListBody(baseUri);
         response.setBody(body);
-        response.setStatus(Status.Ok);
+        response.setStatus(Status.OK);
 
         return response;
     }

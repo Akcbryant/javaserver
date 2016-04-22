@@ -17,7 +17,7 @@ public class PatchHandlerTest {
     public void responseStatusCodeEqualsNoContentWhenEtagDoesntMatch() {
         response = new MockPatchHandler(false).handleRequest(request);
 
-        assertEquals(Status.NoContent, response.getStatus());
+        assertEquals(Status.NO_CONTENT, response.getStatus());
     }
 
     @Test

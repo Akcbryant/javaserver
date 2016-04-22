@@ -21,29 +21,24 @@ public class RouterTest {
     }
 
     @Test
-    public void addRoute_GivenRoute_addsRoute() {
+    public void returnTrueIfRouteExistsInRouter() {
         assertTrue(router.hasRoute("/form"));
     }
 
     @Test
-    public void isValidUri_GivenInvalidRoute_False() {
+    public void returnFalseIfRouteDoesNotExistInRouter() {
         assertFalse(router.hasRoute("/foobar"));
     }
 
     @Test
-    public void isValidUri_GivenValideRoute_True() {
-        assertTrue(router.hasRoute("/form"));
-    }
-
-    @Test
-    public void availableMethods_GivenValidRoute_ReturnsStringOfMethods() {
+    public void returnAvailableMethodsForARoute() {
         String availableMethods = router.availableMethods("/form");
 
         assertEquals("GET,POST,OPTIONS", availableMethods);
     }
 
     @Test
-    public void availableMethods_GivenRouteWithNoMethods_ReturnsEmptyString() {
+    public void returnOnlyOptionsGivenARouteWithNoAditionalMethods() {
         String availableMethods = router.availableMethods("failure");
 
         assertEquals("OPTIONS", availableMethods);

@@ -19,9 +19,9 @@ public class PostPutHandler implements Handler {
         Response response = new Response();
         try {
             writeData(fileUri, request.getBody().getBytes(), resourceUtility);
-            response.setStatus(Status.Ok);
+            response.setStatus(Status.OK);
         } catch (IOException e) {
-            response.setStatus(Status.ServerError);
+            response.setStatus(Status.SERVER_ERROR);
         }
         return response;
     }

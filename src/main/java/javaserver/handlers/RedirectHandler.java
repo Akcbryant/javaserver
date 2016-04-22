@@ -13,7 +13,7 @@ public class RedirectHandler implements Handler {
     public Response handleRequest(Request request) {
         Response response = new Response();
 
-        response.setStatus(Status.Redirect);
+        response.setStatus(Status.REDIRECT);
         response.setHeaders(getRedirectHeader(redirect));
 
         return response;

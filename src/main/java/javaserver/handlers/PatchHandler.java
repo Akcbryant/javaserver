@@ -29,7 +29,7 @@ public class PatchHandler implements Handler {
             writeData(fileUri, data, resourceUtility);
         }
 
-        response.setStatus(Status.NoContent);
+        response.setStatus(Status.NO_CONTENT);
         return response;
     }
 

@@ -20,15 +20,17 @@ public class FormHandlerTest {
 
         response = new FormHandler("", utility).handleRequest(request);
 
-        assertEquals(Status.Ok, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
     }
 
     @Test
-    public void responseStatusIsServerErrorWhenReadResourceFails() {
+    public void responseStatusIsOkWhenReadResourceFails() {
         request.setMethod("GET");
         utility = new MockUtility(false);
 
         response = new FormHandler("", utility).handleRequest(request);
+
+        assertEquals(Status.OK, response.getStatus());
     }
 
     private class MockUtility extends FileUtility {

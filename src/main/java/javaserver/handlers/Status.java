@@ -2,15 +2,15 @@ package javaserver.handlers;
 
 public enum Status {
 
-    Empty(""),
-    Ok("200 OK"),
-    NoContent("204 No Content"),
-    PartialContent("206 Partial Content"),
-    Redirect("302 Redirect"),
-    Unauthorized("401 Unauthorized"),
-    NotFound("404 Not Found"),
-    MethodNotAllowed("405 Method Not Allowed"),
-    ServerError("500 Internal Server Error");
+    EMPTY(""),
+    OK("200 OK"),
+    NO_CONTENT("204 No Content"),
+    PARTIAL_CONTENT("206 Partial Content"),
+    REDIRECT("302 Redirect"),
+    UNAUTHORIZED("401 Unauthorized"),
+    NOT_FOUND("404 Not Found"),
+    METHOD_NOT_ALLOWED("405 Method Not Allowed"),
+    SERVER_ERROR("500 Internal Server Error");
 
     private final String statusMessage;
 

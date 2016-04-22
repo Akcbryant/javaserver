@@ -14,6 +14,6 @@ public class HeadHandlerTest {
         Request request = new Request();
         Response response = headHandler.handleRequest(request);
 
-        assertEquals(Status.Ok, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
     }
 }

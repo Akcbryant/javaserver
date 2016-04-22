@@ -2,6 +2,7 @@ package javaserver.handlers;
 
 import javaserver.Request;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -19,5 +20,6 @@ public class OptionsHandlerTest {
         assertTrue(response.getHeaders().contains("POST"));
         assertTrue(response.getHeaders().contains("OPTIONS"));
         assertTrue(response.getHeaders().contains("Allow:"));
+        assertEquals(Status.OK, response.getStatus());
     }
 }

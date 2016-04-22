@@ -12,6 +12,6 @@ public class MethodNotAllowedHandlerTest {
         Request request = new Request();
         Response response = new MethodNotAllowedHandler().handleRequest(request);
 
-        assertEquals(Status.MethodNotAllowed, response.getStatus());
+        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatus());
     }
 }

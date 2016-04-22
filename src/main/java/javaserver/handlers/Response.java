@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class Response {
 
     private String version = "HTTP/1.1";
-    private Status status = Status.Empty;
+    private Status status = Status.EMPTY;
     private String headers = "";
     private String body = "";
     private byte[] byteBody = new byte[0];

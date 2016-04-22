@@ -28,7 +28,7 @@ public class FileHandlerTest {
 
         response = fileHandler.handleRequest(request);
 
-        assertEquals(Status.MethodNotAllowed, response.getStatus());
+        assertEquals(Status.METHOD_NOT_ALLOWED, response.getStatus());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FileHandlerTest {
 
         response = new FileHandler("", mockUtility).handleRequest(request);
 
-        assertEquals(Status.Ok, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class FileHandlerTest {
 
         response = new FileHandler("", mockUtility).handleRequest(request);
 
-        assertEquals(Status.ServerError, response.getStatus());
+        assertEquals(Status.SERVER_ERROR, response.getStatus());
     }
 
     private class MockFileHandler extends FileHandler {

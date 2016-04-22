@@ -39,7 +39,7 @@ public class PartialHandler extends FileHandler {
 
         response.setBody(body);
         response.setHeaders(makeHeaders(body.length));
-        response.setStatus(Status.PartialContent);
+        response.setStatus(Status.PARTIAL_CONTENT);
 
         return response;
     }

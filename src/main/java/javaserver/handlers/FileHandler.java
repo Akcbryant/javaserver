@@ -24,7 +24,7 @@ public class FileHandler implements Handler {
         String method = request.getMethod();
 
         if (!method.equals("GET")) {
-            response.setStatus(Status.MethodNotAllowed);
+            response.setStatus(Status.METHOD_NOT_ALLOWED);
             return response;
         }
 
@@ -36,10 +36,10 @@ public class FileHandler implements Handler {
     public byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
         try {
             byte[] content = resourceUtility.readResource(fileUri);
-            response.setStatus(Status.Ok);
+            response.setStatus(Status.OK);
             return content;
         } catch (IOException e) {
-            response.setStatus(Status.ServerError);
+            response.setStatus(Status.SERVER_ERROR);
             return new byte[0];
         }
     }

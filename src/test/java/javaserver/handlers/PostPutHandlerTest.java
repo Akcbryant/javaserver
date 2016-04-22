@@ -19,14 +19,14 @@ public class PostPutHandlerTest {
     public void successfulWriteToFileReturnsAnOkResponse() {
         response = new MockPostPutHandler(true).handleRequest(request);
 
-        assertEquals(Status.Ok, response.getStatus());
+        assertEquals(Status.OK, response.getStatus());
     }
 
     @Test
     public void failureToWriteToFileReturnsAFailedResponse() {
         response = new MockPostPutHandler(false).handleRequest(request);
 
-        assertEquals(Status.ServerError, response.getStatus());
+        assertEquals(Status.SERVER_ERROR, response.getStatus());
     }
 
     private class MockPostPutHandler extends PostPutHandler {

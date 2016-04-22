@@ -13,7 +13,7 @@ public class NotFoundHandlerTest {
         Request request = new Request();
         Response response = new NotFoundHandler().handleRequest(request);
 
-        assertEquals(Status.NotFound, response.getStatus());
+        assertEquals(Status.NOT_FOUND, response.getStatus());
 
     }
 }

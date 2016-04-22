@@ -12,7 +12,7 @@ public class RedirectHandlerTest {
         Request request = new Request();
         Response response = new RedirectHandler("http://localhost:5000/").handleRequest(request);
 
-        assertEquals(Status.Redirect, response.getStatus());
+        assertEquals(Status.REDIRECT, response.getStatus());
         assertEquals("Location: http://localhost:5000/", response.getHeaders());
     }
 }

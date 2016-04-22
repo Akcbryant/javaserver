@@ -7,7 +7,7 @@ public class HeadHandler implements Handler {
     public Response handleRequest(Request request) {
         Response response = new Response();
 
-        response.setStatus(Status.Ok);
+        response.setStatus(Status.OK);
 
         return response;
     }

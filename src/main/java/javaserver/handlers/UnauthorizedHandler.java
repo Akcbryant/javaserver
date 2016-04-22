@@ -20,7 +20,7 @@ public class UnauthorizedHandler implements Handler {
     }
 
     public Response handleRequest(Request request) {
-        response.setStatus(Status.Unauthorized);
+        response.setStatus(Status.UNAUTHORIZED);
 
         response.setHeaders(AUTH_HEADER);
 
