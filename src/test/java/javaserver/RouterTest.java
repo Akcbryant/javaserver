@@ -1,6 +1,7 @@
 package javaserver;
 
 import javaserver.handlers.Handler;
+import javaserver.handlers.MethodNotAllowedHandler;
 import javaserver.handlers.Response;
 
 import static org.junit.Assert.assertEquals;
@@ -12,22 +13,27 @@ import org.junit.Before;
 
 public class RouterTest {
 
-    Router router = new Router(".");
+    private Router router = new Router(".");
+    private static final Route GET_ROUTE = new Route("GET", "/form");
+    private static final Route POST_ROUTE = new Route("POST", "/form");
+    private static final Route GET_HANDLER_ROUTE = new Route("GET", "/test", new MethodNotAllowedHandler());
 
     @Before
     public void setUp() {
-        router.addRoute(new Route("/form", "GET", new MockHandler()));
-        router.addRoute(new Route("/form", "POST", new MockHandler()));
+        router.addRoute(GET_ROUTE);
+        router.addRoute(POST_ROUTE);
+        router.addRoute(GET_HANDLER_ROUTE);
     }
 
     @Test
     public void returnTrueIfRouteExistsInRouter() {
-        assertTrue(router.hasRoute("/form"));
+        assertTrue(router.hasUri(GET_ROUTE));
     }
 
     @Test
     public void returnFalseIfRouteDoesNotExistInRouter() {
-        assertFalse(router.hasRoute("/foobar"));
+        Route fakeRoute = new Route("GET", "/foobar");
+        assertFalse(router.hasUri(fakeRoute));
     }
 
     @Test
@@ -44,10 +50,11 @@ public class RouterTest {
         assertEquals("OPTIONS", availableMethods);
     }
 
-    private class MockHandler implements Handler {
+    @Test
+    public void returnHandlerAssociatedWithGivenRoute() {
+        Route testRoute = new Route("GET", "/test");
+        Handler handler = router.getHandler(testRoute);
 
-        public Response handleRequest(Request request) {
-            return null;
-        }
+        assertEquals(new MethodNotAllowedHandler().getClass(), handler.getClass());
     }
 }

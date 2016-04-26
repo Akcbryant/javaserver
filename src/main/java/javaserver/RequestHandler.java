@@ -17,33 +17,33 @@ public class RequestHandler {
 
     private Request request;
     private Response response;
-    private Router router;
+    private Router customRouter;
     private Authenticator authenticator;
 
     private static final FileUtility fileUtility = new FileUtility();
+
+    public RequestHandler(Router customRouter, Authenticator authenticator) {
+        this.customRouter = customRouter;
+        this.authenticator = authenticator;
+    }
 
     public Response handleRequest(Request request) {
         Handler handler = determineHandler(request);
         return handler.handleRequest(request);
     }
 
-    public RequestHandler(Router router, Authenticator authenticator) {
-        this.router = router;
-        this.authenticator = authenticator;
-    }
-
     public Handler determineHandler(Request request) {
         String uri = removeParameters(request.getUri());
         String method = request.getMethod();
-        Route route = new Route(uri, method);
+        Route route = new Route(method, uri);
 
         if (authenticator.isRouteProtected(route) &&
             !authenticator.isRequestAuthenticated(request)) {
-                return new UnauthorizedHandler(router.getRootPath(), fileUtility);
+                return new UnauthorizedHandler(customRouter.getRootPath(), fileUtility);
         }
 
-        if (router.hasRoute(uri)) {
-            Handler handler = router.getHandler(uri, method);
+        if (customRouter.hasUri(route)) {
+            Handler handler = customRouter.getHandler(route);
             if (handler != null) {
                 return handler;
             } else {
@@ -51,7 +51,7 @@ public class RequestHandler {
             }
         }
 
-        String fileUri = router.getRootPath() + uri;
+        String fileUri = customRouter.getRootPath() + uri;
         File file = getFile(fileUri);
 
         if (isFile(file)) {

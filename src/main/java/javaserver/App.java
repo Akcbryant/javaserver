@@ -30,10 +30,10 @@ public class App {
 
         authenticator.addAuthenticatedUser("admin:hunter2");
 
-        authenticator.addToProtectedRoutes(new Route("/logs", "GET"));
-        authenticator.addToProtectedRoutes(new Route("/log", "GET"));
-        authenticator.addToProtectedRoutes(new Route("/these", "PUT"));
-        authenticator.addToProtectedRoutes(new Route("/requests", "HEAD"));
+        authenticator.addToProtectedRoutes(new Route("GET", "/logs"));
+        authenticator.addToProtectedRoutes(new Route("GET", "/log"));
+        authenticator.addToProtectedRoutes(new Route("PUT", "/these"));
+        authenticator.addToProtectedRoutes(new Route("HEAD", "/requests"));
 
         return authenticator;
     }
@@ -42,20 +42,20 @@ public class App {
         Router router = new Router(directory);
         FileUtility fileUtility = new FileUtility();
 
-        router.addRoute(new Route("/form", "GET", new FormHandler(directory + "/form", fileUtility)));
-        router.addRoute(new Route("/form", "POST", new PostPutHandler(directory + "/form", fileUtility)));
-        router.addRoute(new Route("/form", "PUT", new PostPutHandler(directory + "/form", fileUtility)));
-        router.addRoute(new Route("/form", "DELETE", new DeleteHandler(directory + "/form", fileUtility)));
-        router.addRoute(new Route("/redirect", "GET", new RedirectHandler("http://localhost:5000/")));
-        router.addRoute(new Route("/method_options", "GET", new FileHandler(directory + "/method_options", fileUtility)));
-        router.addRoute(new Route("/method_options", "HEAD", new HeadHandler()));
-        router.addRoute(new Route("/method_options", "POST", new PostPutHandler(directory + "/method_options", fileUtility)));
-        router.addRoute(new Route("/method_options", "PUT", new PostPutHandler(directory + "/method_options", fileUtility)));
-        router.addRoute(new Route("/method_options", "OPTIONS", new OptionsHandler(router.availableMethods("/method_options"))));
-        router.addRoute(new Route("/parameters", "GET", new ParametersHandler()));
-        router.addRoute(new Route("/patch-content.txt", "GET", new FileHandler(directory + "/patch-content.txt", fileUtility)));
-        router.addRoute(new Route("/patch-content.txt", "PATCH", new PatchHandler(directory + "/patch-content.txt", fileUtility)));
-        router.addRoute(new Route("/logs", "GET", new FileHandler(directory + "/logs", fileUtility)));
+        router.addRoute(new Route("GET", "/form", new FormHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("POST", "/form", new PostPutHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("PUT", "/form", new PostPutHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("DELETE", "/form", new DeleteHandler(directory + "/form", fileUtility)));
+        router.addRoute(new Route("GET", "/redirect", new RedirectHandler("http://localhost:5000/")));
+        router.addRoute(new Route("GET", "/method_options", new FileHandler(directory + "/method_options", fileUtility)));
+        router.addRoute(new Route("HEAD", "/method_options", new HeadHandler()));
+        router.addRoute(new Route("POST", "/method_options", new PostPutHandler(directory + "/method_options", fileUtility)));
+        router.addRoute(new Route("PUT", "/method_options", new PostPutHandler(directory + "/method_options", fileUtility)));
+        router.addRoute(new Route("OPTIONS", "/method_options", new OptionsHandler(router.availableMethods("/method_options"))));
+        router.addRoute(new Route("GET", "/parameters",  new ParametersHandler()));
+        router.addRoute(new Route("GET", "/patch-content.txt", new FileHandler(directory + "/patch-content.txt", fileUtility)));
+        router.addRoute(new Route("PATCH", "/patch-content.txt", new PatchHandler(directory + "/patch-content.txt", fileUtility)));
+        router.addRoute(new Route("GET", "/logs", new FileHandler(directory + "/logs", fileUtility)));
         return router;
     }
 }

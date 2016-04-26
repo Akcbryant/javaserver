@@ -23,19 +23,19 @@ public class Router {
         routes.add(route);
     }
 
-    public boolean hasRoute(String uri) {
-        for (Route route : routes) {
-            if (route.uri.equals(uri)) {
+    public boolean hasUri(Route route) {
+        for (Route routerRoute : routes) {
+            if (routerRoute.getUri().equals(route.getUri())) {
                 return true;
             }
         }
         return false;
     }
 
-    public Handler getHandler(String uri, String method) {
-        for (Route route : routes) {
-            if (route.uri.equals(uri) && route.method.equals(method)) {
-                return route.handler;
+    public Handler getHandler(Route route) {
+        for (Route routerRoute : routes) {
+            if (routerRoute.equals(route)) {
+               return routerRoute.getHandler();
             }
         }
         return null;
@@ -45,8 +45,9 @@ public class Router {
         String availableMethods = "";
 
         for (Route route : routes) {
-            if (route.uri.equals(uri)) {
-                availableMethods += route.method + ",";
+            String routeUri = route.getUri();
+            if (routeUri.equals(uri)) {
+                availableMethods += route.getMethod() + ",";
             }
         }
 

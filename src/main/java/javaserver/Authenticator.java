@@ -21,7 +21,9 @@ public class Authenticator {
 
     public boolean isRouteProtected(Route route) {
         for (Route currentRoute : protectedRoutes) {
-            if (route.toString().equals(currentRoute.toString())) return true;
+            if (route.equals(currentRoute)) {
+               return true;
+            }
         }
         return false;
     }

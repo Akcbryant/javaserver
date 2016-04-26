@@ -54,17 +54,17 @@ public class RequestHandlerTest {
     @Before
     public void setUp() {
         testRouter = new Router(".");
-        testRouter.addRoute(new Route("/form", "GET", FILE_HANDLER));
-        testRouter.addRoute(new Route("/form", "DELETE", DELETE_HANDLER));
-        testRouter.addRoute(new Route("/method_options", "PUT", POST_PUT_HANDLER));
-        testRouter.addRoute(new Route("/method_options", "POST", POST_PUT_HANDLER));
-        testRouter.addRoute(new Route("/method_options", "OPTIONS", OPTIONS_HANDLER));
-        testRouter.addRoute(new Route("/parameters", "GET", PARAMETERS_HANDLER));
-        testRouter.addRoute(new Route("/redirect", "GET", REDIRECT_HANDLER));
-        testRouter.addRoute(new Route("/logs", "GET", FILE_HANDLER));
+        testRouter.addRoute(new Route("GET", "/form", FILE_HANDLER));
+        testRouter.addRoute(new Route("DELETE", "/form", DELETE_HANDLER));
+        testRouter.addRoute(new Route("PUT","/method_options", POST_PUT_HANDLER));
+        testRouter.addRoute(new Route("POST", "/method_options", POST_PUT_HANDLER));
+        testRouter.addRoute(new Route("OPTIONS", "/method_options", OPTIONS_HANDLER));
+        testRouter.addRoute(new Route("GET", "/parameters", PARAMETERS_HANDLER));
+        testRouter.addRoute(new Route("GET", "/redirect", REDIRECT_HANDLER));
+        testRouter.addRoute(new Route("GET", "/logs",  FILE_HANDLER));
 
         authenticator = new Authenticator();
-        authenticator.addToProtectedRoutes(new Route("/logs", "GET"));
+        authenticator.addToProtectedRoutes(new Route("GET", "/logs"));
 
         requestHandler = new RequestHandler(testRouter, authenticator);
     }

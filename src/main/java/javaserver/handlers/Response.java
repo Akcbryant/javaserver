@@ -63,10 +63,6 @@ public class Response {
         this.byteBody = byteBody;
     }
 
-    public String toString() {
-        return version + " " + status + "\r\n" + headers + "\r\n" + body;
-    }
-
     public byte[] getBytes() {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         try {
@@ -76,5 +72,9 @@ public class Response {
             System.out.println(e.toString());
         }
         return byteStream.toByteArray();
+    }
+
+    public String toString() {
+        return version + " " + status + "\r\n" + headers + "\r\n" + body;
     }
 }
