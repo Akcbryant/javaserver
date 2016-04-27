@@ -5,15 +5,17 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.HashMap;
 
+import javaserver.helpers.ParameterDecoder;
+
 public class RequestParser {
 
-    public Request parseRequest(InputStream input) {
+    public static Request parseRequest(InputStream input) {
         String inputString = convertInputStreamToString(input);
         Request request = parseInput(inputString);
         return request;
     }
 
-    private String convertInputStreamToString(InputStream input) {
+    private static String convertInputStreamToString(InputStream input) {
         try {
             return new Scanner(input).useDelimiter("\\z").next();
         } catch (NoSuchElementException|IllegalStateException e) {
@@ -21,23 +23,27 @@ public class RequestParser {
         }
     }
 
-    private Request parseInput(String input) {
+    private static Request parseInput(String input) {
         try {
             String method = parseFirstLine(input, 0);
-            String uri = parseFirstLine(input, 1);
+
+            String completeUri = parseFirstLine(input, 1);
+            String uri = ParameterDecoder.decodeUri(completeUri);
+            String parameters = ParameterDecoder.decodeParameters(completeUri);
+
             String version = parseFirstLine(input, 2);
 
             HashMap<String, String> headers = parseHeaders(input);
 
             String body = getBody(input);
 
-            return new Request(method, uri, version, headers, body);
+            return new Request(method, uri, parameters, version, headers, body);
         } catch (NoSuchElementException|IllegalStateException e) {
             return new Request();
         }
     }
 
-    private String parseFirstLine(String input, int part) throws NoSuchElementException, IllegalStateException {
+    private static String parseFirstLine(String input, int part) throws NoSuchElementException, IllegalStateException {
         Scanner scanner = createScanner(input, "\r\n");
         String firstLine = scanner.next();
         scanner = createScanner(firstLine, "\\s");
@@ -48,7 +54,7 @@ public class RequestParser {
         return scanner.next();
     }
 
-    private HashMap<String, String> parseHeaders(String input) {
+    private static HashMap<String, String> parseHeaders(String input) {
         try {
             Scanner scanner = createScanner(input, "\r\n");
             scanner.next();
@@ -68,7 +74,7 @@ public class RequestParser {
         }
     }
 
-    private String getBody(String input) {
+    private static String getBody(String input) {
         try {
             Scanner scanner = createScanner(input, "\r\n\r\n");
             scanner.next();
@@ -76,10 +82,9 @@ public class RequestParser {
         } catch (NoSuchElementException|IllegalStateException e) {
             return "";
         }
-
     }
 
-    private Scanner createScanner(String input, String delimiter) {
+    private static Scanner createScanner(String input, String delimiter) {
         return new Scanner(input).useDelimiter(delimiter);
     }
 }

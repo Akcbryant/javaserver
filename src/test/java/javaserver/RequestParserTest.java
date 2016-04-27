@@ -3,6 +3,7 @@ package javaserver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 import org.junit.Before;
 
@@ -10,15 +11,23 @@ import java.io.ByteArrayInputStream;
 
 public class RequestParserTest {
 
-    private static final String firstLine = "GET / HTTP/1.1\r\n";
-    private static final String headers = "Accept: audio/*; q=0.2, audio/basic\r\n" +
+    private static final String FIRST_LINE = "GET / HTTP/1.1\r\n";
+    private static final String HEADERS = "Accept: audio/*; q=0.2, audio/basic\r\n" +
                                           "Allow: GET, HEAD, PUT\r\n" +
                                           "Expires: Thu, 01 Dec 1994 16:00:00 GMT\r\n" +
-                                          "From: testing@headers.org\r\n\r\n";
-    private static final String body = "this is test body data\r\n";
-    private String testString = firstLine + headers + body;
+                                          "From: testing@HEADERS.org\r\n\r\n";
+    private static final String BODY = "this is test body data\r\n";
+    private static final String ENCODED_FIRST_LINE = "GET /test%20test?%20with%20 HTTP/1.1\r\n";
+
+    private String testString = FIRST_LINE + HEADERS + BODY;
 
     Request request = createTestRequest(testString);
+
+    private Request createTestRequest(String input) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        Request request = RequestParser.parseRequest(inputStream);
+        return request;
+    }
 
     @Test
     public void methodIsParsed() {
@@ -43,7 +52,7 @@ public class RequestParserTest {
 
     @Test
     public void bodyIsParsed() {
-        assertEquals(body, request.getBody());
+        assertEquals(BODY, request.getBody());
     }
 
     @Test
@@ -55,7 +64,7 @@ public class RequestParserTest {
 
     @Test
     public void emptyBody() {
-        testString = firstLine + headers;
+        testString = FIRST_LINE + HEADERS;
         request = createTestRequest(testString);
 
         assertFalse(request.getMethod().isEmpty());
@@ -64,7 +73,7 @@ public class RequestParserTest {
 
     @Test
     public void emptyHeadersAndBody() {
-        testString = firstLine;
+        testString = FIRST_LINE;
         request = createTestRequest(testString);
 
         assertFalse(request.getVersion().isEmpty());
@@ -72,9 +81,11 @@ public class RequestParserTest {
         assertTrue(request.getBody().isEmpty());
     }
 
-    private Request createTestRequest(String input) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        Request request = new RequestParser().parseRequest(inputStream);
-        return request;
+    @Test
+    public void uriWithEncodingGetsDecodedAndSetsParameters() {
+        request = createTestRequest(ENCODED_FIRST_LINE);
+
+        assertEquals("/test test", request.getUri());
+        assertEquals(" with ", request.getParameters());
     }
 }

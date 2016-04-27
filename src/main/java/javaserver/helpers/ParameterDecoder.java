@@ -5,11 +5,7 @@ import java.io.UnsupportedEncodingException;
 
 public class ParameterDecoder {
 
-    public boolean hasParameters(String uri) {
-        return uri.contains("?");
-    }
-
-    public String getParametersString(String uri) {
+    protected static String getParametersString(String uri) {
         String[] splitUri = uri.split("\\?");
         if (splitUri.length > 1) {
             return splitUri[1];
@@ -17,7 +13,7 @@ public class ParameterDecoder {
         return "";
     }
 
-    public String decodeString(String input) {
+    protected static String decodeString(String input) {
         try {
             return new URLDecoder().decode(input, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -25,7 +21,12 @@ public class ParameterDecoder {
         }
     }
 
-    public String decodeUri(String input) {
+    public static String decodeUri(String input) {
+        String uri = input.split("\\?")[0];
+        return decodeString(uri);
+    }
+
+    public static String decodeParameters(String input) {
         String params = getParametersString(input);
 
         params = params.replace("=", " = ");

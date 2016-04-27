@@ -12,7 +12,7 @@ public class ParametersHandler implements Handler {
 
         response.setStatus(Status.OK);
 
-        String body = decoder.decodeUri(request.getUri());
+        String body = request.getParameters();
         response.setBody(body);
 
         return response;

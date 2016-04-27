@@ -36,7 +36,7 @@ public class Worker implements Runnable {
     }
 
     protected Request getRequest(InputStream inputStream) {
-        return new RequestParser().parseRequest(inputStream);
+        return RequestParser.parseRequest(inputStream);
     }
 
     protected void writeResponse(Response response) throws IOException {
