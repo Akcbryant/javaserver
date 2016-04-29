@@ -7,13 +7,11 @@ import java.io.IOException;
 
 public class FileHandler implements Handler {
 
+    protected static final String NEWLINE = System.getProperty("line.separator");
+
     protected ResourceUtility resourceUtility;
     protected String fileUri;
     protected Response response = new Response();
-
-    public FileHandler() {
-
-    }
 
     public FileHandler(String fileUri, ResourceUtility resourceUtility) {
         this.fileUri = fileUri;

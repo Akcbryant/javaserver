@@ -10,16 +10,11 @@ public class PartialHandler extends FileHandler {
     private static final String BYTE_SEPARATOR = "-";
     private static final String HEADER_SEPARATOR = "=";
     private static final String CONTENT_LENGTH_HEADER = "Content-Length: ";
-    private static final String RANGE_HEADER = "Range";
-    private static final String NEWLINE = System.getProperty("line.separator");
+    protected static final String RANGE_HEADER = "Range";
 
     private String fileUri;
     private ResourceUtility resourceUtility;
     private Response response = new Response();
-
-    public PartialHandler() {
-
-    }
 
     public PartialHandler(String fileUri, ResourceUtility resourceUtility) {
         super(fileUri, resourceUtility);

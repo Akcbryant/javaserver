@@ -7,11 +7,11 @@ public class RequestTest {
 
     private Request request;
 
-    private static final String NEW_LINE = Request.NEW_LINE;
+    private static final String NEWLINE = Request.REQUEST_NEWLINE;
     private static final String SPACE = Request.SPACE;
     private static final String EMPTY_HEADERS = "{}";
 
-    private static final String EMPTY_REQUEST = SPACE + SPACE + NEW_LINE + EMPTY_HEADERS + NEW_LINE + NEW_LINE;
+    private static final String EMPTY_REQUEST = SPACE + SPACE + NEWLINE + EMPTY_HEADERS + NEWLINE + NEWLINE;
 
     @Test
     public void aRequestObjectIsAnEmptyStringByDefault() {

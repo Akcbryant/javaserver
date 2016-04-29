@@ -7,14 +7,9 @@ public class ImageHandler extends FileHandler {
 
     private static final String CONTENT_LENGTH = "Content-Length: ";
     private static final String IMAGE_TYPE = "Content-Type: image/";
-    private static final String NEWLINE = System.getProperty("line.separator");
 
     private String fileUri;
     private ResourceUtility resourceUtility;
-
-    protected ImageHandler() {
-
-    }
 
     public ImageHandler(String fileUri, ResourceUtility resourceUtility) {
         super(fileUri, resourceUtility);

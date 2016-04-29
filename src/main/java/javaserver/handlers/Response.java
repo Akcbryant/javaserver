@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 public class Response {
 
+    private static final String RESPONSE_NEWLINE = "\r\n";
+
     private String version = "HTTP/1.1";
     private Status status = Status.EMPTY;
     private String headers = "";
@@ -75,6 +77,6 @@ public class Response {
     }
 
     public String toString() {
-        return version + " " + status + "\r\n" + headers + "\r\n" + body;
+        return version + " " + status + RESPONSE_NEWLINE + headers + RESPONSE_NEWLINE + body;
     }
 }

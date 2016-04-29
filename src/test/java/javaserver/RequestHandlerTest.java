@@ -9,6 +9,7 @@ import javaserver.handlers.MethodNotAllowedHandler;
 import javaserver.handlers.NotFoundHandler;
 import javaserver.handlers.OptionsHandler;
 import javaserver.handlers.ParametersHandler;
+import javaserver.handlers.PatchHandler;
 import javaserver.handlers.PostPutHandler;
 import javaserver.handlers.RedirectHandler;
 import javaserver.handlers.Response;
@@ -45,6 +46,7 @@ public class RequestHandlerTest {
     private static final DirectoryHandler DIRECTORY_HANDLER = new DirectoryHandler("");
     private static final PostPutHandler POST_PUT_HANDLER = new PostPutHandler("", UTILITY);
     private static final OptionsHandler OPTIONS_HANDLER = new OptionsHandler("");
+    private static final PatchHandler PATCH_HANDLER = new PatchHandler(null, null);
     private static final ParametersHandler PARAMETERS_HANDLER = new ParametersHandler();
     private static final RedirectHandler REDIRECT_HANDLER = new RedirectHandler("");
     private static final MethodNotAllowedHandler METHOD_NOT_ALLOWED_HANDLER = new MethodNotAllowedHandler();
@@ -168,6 +170,17 @@ public class RequestHandlerTest {
         handler = new MockRequestHandler(false, true).determineHandler(request);
 
         assertEquals(DIRECTORY_HANDLER.getClass(), handler.getClass());
+    }
+
+    @Test
+    public void returnPatchHandlerFromAPatchToANonCustomRoute() {
+        request = new Request();
+        request.setMethod("PATCH");
+        request.setUri("/content.txt");
+
+        handler = new MockRequestHandler(true, false).determineHandler(request);
+
+        assertEquals(PATCH_HANDLER.getClass(), handler.getClass());
     }
 
     @Test

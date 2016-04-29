@@ -14,6 +14,12 @@ import javaserver.utility.FileUtility;
 
 public class App {
 
+    private static Server server;
+
+    App(Server server) {
+        this.server = server;
+    }
+
     public static void main(String[] args) {
         String directory = ArgumentParser.getDirectory(args);
         int port = Integer.parseInt(ArgumentParser.getPort(args));
@@ -21,7 +27,10 @@ public class App {
         Router cobSpecRouter = makeCobSpecRouter(directory);
         Authenticator cobSpecAuth = makeCobSpecAuthenticator();
 
-        Server server = new Server(cobSpecRouter, cobSpecAuth, port);
+        if (server == null) {
+            server = new Server(cobSpecRouter, cobSpecAuth, port);
+        }
+
         server.turnOn();
     }
 
@@ -53,8 +62,6 @@ public class App {
         router.addRoute(new Route("PUT", "/method_options", new PostPutHandler(directory + "/method_options", fileUtility)));
         router.addRoute(new Route("OPTIONS", "/method_options", new OptionsHandler(router.availableMethods("/method_options"))));
         router.addRoute(new Route("GET", "/parameters",  new ParametersHandler()));
-        router.addRoute(new Route("GET", "/patch-content.txt", new FileHandler(directory + "/patch-content.txt", fileUtility)));
-        router.addRoute(new Route("PATCH", "/patch-content.txt", new PatchHandler(directory + "/patch-content.txt", fileUtility)));
         router.addRoute(new Route("GET", "/logs", new FileHandler(directory + "/logs", fileUtility)));
         return router;
     }

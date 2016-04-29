@@ -10,19 +10,19 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class PatchHandler implements Handler {
+public class PatchHandler extends FileHandler {
 
-    private String fileUri;
-    private Response response = new Response();
-    private ResourceUtility resourceUtility;
+    private static final String ETAG_HEADER = "If-Match";
 
     public PatchHandler(String fileUri, ResourceUtility resourceUtility) {
+        super(fileUri, resourceUtility);
         this.fileUri = fileUri;
         this.resourceUtility = resourceUtility;
     }
 
+    @Override
     public Response handleRequest(Request request) {
-        String etag = request.getHeaders().get("If-Match");
+        String etag = request.getHeaders().get(ETAG_HEADER);
 
         if (matchesEtag(etag)) {
             byte[] data = request.getBody().getBytes();
@@ -39,12 +39,13 @@ public class PatchHandler implements Handler {
         return fileSHA.equals(etag);
     }
 
-    private byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
-            try {
-                return resourceUtility.readResource(fileUri);
-            } catch (IOException e) {
-                return new byte[0];
-            }
+    @Override
+    public byte[] getFileContents(String fileUri, ResourceUtility resourceUtility) {
+        try {
+            return resourceUtility.readResource(fileUri);
+        } catch (IOException e) {
+            return new byte[0];
+        }
     }
 
     private void writeData(String fileUri, byte[] data, ResourceUtility resourceUtility) {

@@ -98,6 +98,7 @@ public class PartialHandlerTest {
         private byte[] fileContents;
 
         MockPartialHandler(byte[] fileContents) {
+            super(null, null);
             this.fileContents = fileContents;
         }
 

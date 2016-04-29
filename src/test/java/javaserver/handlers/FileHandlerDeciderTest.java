@@ -23,12 +23,12 @@ public class FileHandlerDeciderTest {
     @Test
     public void returnPartialHandlerWhenGivenAPartialRequest() {
         HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put(FileHandlerDecider.RANGE_HEADER, TEST_STRING);
+        headers.put(PartialHandler.RANGE_HEADER, TEST_STRING);
         request.setHeaders(headers);
 
         fileHandler = decideFileHandler(request);
 
-        assertEquals(new PartialHandler().getClass(), fileHandler.getClass());
+        assertEquals(new PartialHandler(null, null).getClass(), fileHandler.getClass());
     }
 
     @Test
@@ -38,7 +38,16 @@ public class FileHandlerDeciderTest {
 
         fileHandler = decideFileHandler(request);
 
-        assertEquals(new ImageHandler().getClass(), fileHandler.getClass());
+        assertEquals(new ImageHandler(null, null).getClass(), fileHandler.getClass());
+    }
+
+    @Test
+    public void returnPatchHandlerWhenTheHTTPMethodIsPatch() {
+        request.setMethod("PATCH");
+
+        fileHandler = decideFileHandler(request);
+
+        assertEquals(new PatchHandler(null, null).getClass(), fileHandler.getClass());
     }
 
     @Test
@@ -47,6 +56,6 @@ public class FileHandlerDeciderTest {
 
         fileHandler = decideFileHandler(request);
 
-        assertEquals(new FileHandler().getClass(), fileHandler.getClass());
+        assertEquals(new FileHandler(null, null).getClass(), fileHandler.getClass());
     }
 }

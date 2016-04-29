@@ -17,6 +17,10 @@ public class Server {
     private Authenticator authenticator;
     private ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
+    Server() {
+
+    }
+
     Server(Router router, Authenticator authenticator, int port) {
         try {
             this.serverSocket = new ServerSocket(port);

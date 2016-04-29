@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Request {
 
-    protected static final String NEW_LINE = "\r\n";
+    protected static final String REQUEST_NEWLINE = "\r\n";
     protected static final String SPACE = " ";
 
     private String method = "";
@@ -77,10 +77,10 @@ public class Request {
     }
 
     public String getFirstLine() {
-        return method + SPACE + uri + SPACE + version + NEW_LINE;
+        return method + SPACE + uri + SPACE + version + REQUEST_NEWLINE;
     }
 
     public String toString() {
-        return method + SPACE + uri + SPACE + version + NEW_LINE + headers.toString() + NEW_LINE + body + NEW_LINE;
+        return method + SPACE + uri + SPACE + version + REQUEST_NEWLINE + headers.toString() + REQUEST_NEWLINE + body + REQUEST_NEWLINE;
     }
 }
