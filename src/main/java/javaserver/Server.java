@@ -21,7 +21,7 @@ public class Server {
 
     }
 
-    Server(Router router, Authenticator authenticator, int port) {
+    public Server(Router router, Authenticator authenticator, int port) {
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {

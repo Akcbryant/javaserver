@@ -18,7 +18,7 @@ public class Response {
 
     }
 
-    Response(String version, Status status, String headers, String body) {
+    public Response(String version, Status status, String headers, String body) {
         this.version = version;
         this.status = status;
         this.headers = headers;

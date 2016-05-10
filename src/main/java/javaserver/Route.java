@@ -9,7 +9,7 @@ public class Route {
     private String method;
     private Handler handler;
 
-    Route(String method, String uri, Handler handler) {
+    public Route(String method, String uri, Handler handler) {
         this.method = method;
         this.uri = uri;
         this.handler = handler;
